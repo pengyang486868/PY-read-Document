@@ -2,7 +2,7 @@ from pptapi.readppt import readpptx
 from pdfapi.pdf2pic import transpic
 from pdfapi import readpdf
 from dwgapi import readdxf
-from wordapi import readword
+from wordapi import readword, transdoc
 
 if __name__ == '__main__':
     pptxpath = r'D:/2020增补-2019彭阳年终.pptx'
@@ -17,5 +17,10 @@ if __name__ == '__main__':
     # readdxf.read(dxfpath)
     # tarr = readpdf.readtext(pdftxtpath)
     # print(tarr)
-    cnt = readword.readimg(wordpath, resultdir)
-    print(cnt)
+
+    word03path = r'D:/data/word03test.doc'
+    success, newfile = transdoc.doc2docx(word03path)
+    if success:
+        # cnt = readword.readimg(newfile, resultdir)
+        doctxt = readword.readtxt(newfile)
+        print(doctxt)
