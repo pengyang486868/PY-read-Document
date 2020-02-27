@@ -24,8 +24,8 @@ def get_file_info():
 
 def clear_file_info():
     dw = get_dw_engine()
-    cnt = dw.execute('truncate file_info')
-    return cnt
+    res = dw.execute('DELETE FROM file_info WHERE id>0')
+    return res.rowcount
 
 
 def write_file_info(data: pd.DataFrame):
