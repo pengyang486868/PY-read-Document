@@ -2,6 +2,25 @@ import os
 from pptx import Presentation
 
 
+def readtxt(path):
+    content = []
+    ppt = Presentation(path)
+
+    for slide in ppt.slides:
+        for shape in slide.shapes:
+            if not shape.has_text_frame:
+                pass
+            else:
+                content.append(shape.text)
+
+    # content = '\n'.join(content)
+    return content
+
+
+def readimg(path):
+    pass
+
+
 def readpptx(path, resultdir):
     content = []
     ppt = Presentation(path)
