@@ -24,19 +24,25 @@ for fullname in fname_arr:
         if not transformed:
             shutil.copy(fpath, filedir)
 
-print('analysis')
-result = []
-for indx, fullname in enumerate(fname_arr):
-    print(fullname)
-    ext_tuple = os.path.splitext(fullname)
-    fname = ext_tuple[0]
-    extname = ext_tuple[1]
-    fpath = os.path.join(filedir, fullname)
-    kwords, kwfreq = core.analysis(fpath, extname)
-    result.append({'id': indx + 100, 'fname': fname, 'extname': extname, 'username': username,
-                   'keywords': str(kwords), 'kwfreq': kwfreq})
+reanalysis = False
+if reanalysis:
+    print('analysis')
+    result = []
+    for indx, fullname in enumerate(fname_arr):
+        print(fullname)
+        ext_tuple = os.path.splitext(fullname)
+        fname = ext_tuple[0]
+        extname = ext_tuple[1]
+        fpath = os.path.join(filedir, fullname)
+        kwords, kwfreq = core.analysis(fpath, extname)
+        result.append({'id': indx + 100, 'fname': fname, 'extname': extname, 'username': username,
+                       'keywords': str(kwords), 'kwfreq': kwfreq})
 
-resultdf = pd.DataFrame(result)
-cnt = conn.clear_file_info()
-conn.write_file_info(resultdf)
-print('del', str(cnt), 'write', str(len(resultdf)))
+    resultdf = pd.DataFrame(result)
+    cnt = conn.clear_file_info()
+    conn.write_file_info(resultdf)
+    print('del', str(cnt), 'write', str(len(resultdf)))
+
+print('cluster')
+fobjs = conn.get_file_info(returnobj=True)
+core.file_cluster(fobjs)

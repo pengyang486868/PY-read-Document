@@ -2,6 +2,7 @@ import os
 from sqlalchemy import create_engine
 import pandas as pd
 import config
+from model import FileInfo
 
 
 def get_dw_constr():
@@ -13,13 +14,27 @@ def get_dw_engine():
     return create_engine(get_dw_constr()).connect()
 
 
-def get_file_info():
+def get_file_info(returnobj=False):
     dw = get_dw_engine()
     query = '''
         SELECT * FROM file_info
     '''
     data = pd.read_sql_query(query, dw)
-    return data
+
+    if not returnobj:
+        return data
+
+    objs = []
+    for indx, row in data.iterrows():
+        curobj = FileInfo()
+        curobj.id = row['id']
+        curobj.fname = row['fname']
+        curobj.extname = row['extname']
+        curobj.username = row['username']
+        curobj.keywords = row['keywords'].split(',')
+        curobj.kwfreq = list(map(int, row['kwfreq'].split(',')))
+        objs.append(curobj)
+    return objs
 
 
 def clear_file_info():
