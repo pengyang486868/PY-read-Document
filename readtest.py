@@ -6,21 +6,15 @@ from wordapi import readword, transdoc
 
 if __name__ == '__main__':
     pptxpath = r'D:/2020增补-2019彭阳年终.pptx'
-    pdfpath = r'D:/data/pdftest.pdf'
+    pdfpath = r'D:/data/pt.pdf'
     pdftxtpath = r'D:/data/pdftxt.pdf'
     dxfpath = r'D:/data/dxftest.dxf'
     wordpath = r'D:/data/wordtxt.docx'
     resultdir = r'D:/result'
 
-    # txt = readppt.readpptx(pptxpath, resultdir)
-    # pagecount = transpic(pdfpath, resultdir)
-    # readdxf.read(dxfpath)
-    # tarr = readpdf.readtext(pdftxtpath)
-    # print(tarr)
+    pdftxt = readpdf.readtext(pdfpath)
 
-    word03path = r'D:/data/word03test.doc'
-    success, newfile = transdoc.doc2docx(word03path)
-    if success:
-        # cnt = readword.readimg(newfile, resultdir)
-        doctxt = readword.readtxt(newfile)
-        print(doctxt)
+    # cntarr = [1] * 5 + [3] * 3 + [11] * 4 + [12] * 6 + [13] * 48 + [14] * 24 + \
+    #          [15] * 30 + [16] * 10 + [17] * 2 + [18]
+    # lmin, lmax = readpdf.pdflinelen(cntarr, lenrange=4, minlen=7)
+    print()

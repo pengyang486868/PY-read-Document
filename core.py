@@ -1,6 +1,7 @@
 from txtapi import readtxt
 from wordapi import readword, transdoc
 from pptapi import readppt, transppt
+from pdfapi import readpdf
 import utils
 import config
 
@@ -33,6 +34,9 @@ def analysis(fpath, extname):
         content = readppt.readtxt(fpath)
     if extname == '.ppt':
         content = readppt.readtxt(fpath + 'x')
+
+    if extname == '.pdf':
+        content = readpdf.readtext(fpath)
 
     # do analysis
     if content is not None:
