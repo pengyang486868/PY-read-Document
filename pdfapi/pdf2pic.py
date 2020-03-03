@@ -14,8 +14,7 @@ def transpic(full_path, resultdir):
     for pg in range(doc.pageCount):
         page = doc[pg]
         pm = page.getPixmap(matrix=trans, alpha=False)  # 将其转化为光栅文件（位数）
-        print(pg)
         # writePNG
-        pm.writeImage(os.path.join(resultdir, str(pg) + 'page.png'))
+        pm.writeImage(os.path.join(resultdir, str(pg) + '.png'))
 
     return doc.pageCount

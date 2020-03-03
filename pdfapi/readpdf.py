@@ -1,7 +1,12 @@
 import pdfplumber
 from collections import Counter
+from .pdf2pic import transpic
+from ocrapi import baidu as ocr
+import config
+import os, uuid
 
 
+# can extract text fields
 def readtext(full_path):
     result = []
     with pdfplumber.open(full_path) as pdf:
@@ -19,6 +24,26 @@ def readtext(full_path):
     minlen, maxlen = pdflinelen(cntarr)
     result = combine_normal_line(result, minlen, maxlen)
 
+    return result
+
+
+# to pics then ocr
+def readbyocr(full_path):
+    tempdir = os.path.join(config.root_dir, config.test_username, 'temp', str(uuid.uuid4()))
+    os.mkdir(tempdir)
+    transpic(full_path, resultdir=tempdir)
+
+    result = []
+    pics = os.listdir(tempdir)
+    pics.sort(key=lambda x: int(os.path.splitext(x)[0]))
+    for p in pics:
+        result += ocr.img_to_str(os.path.join(tempdir, p))
+        print(p)
+
+    # 还需猜测文档一般行字数 合并句尾分段
+    cntarr = list(map(len, result))
+    minlen, maxlen = pdflinelen(cntarr)
+    result = combine_normal_line(result, minlen, maxlen)
     return result
 
 
