@@ -33,6 +33,9 @@ def get_file_info(returnobj=False):
         curobj.username = row['username']
         curobj.keywords = row['keywords'].split(',')
         curobj.kwfreq = list(map(int, row['kwfreq'].split(',')))
+        curobj.label = row['label']
+        if row['istest'] == 1:
+            curobj.istest = True
         objs.append(curobj)
     return objs
 

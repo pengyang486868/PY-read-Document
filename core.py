@@ -4,11 +4,17 @@ from pptapi import readppt, transppt
 from pdfapi import readpdf
 import utils
 import config
+import numpy as np
 from model import FileInfo
 from typing import List
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans, DBSCAN,SpectralClustering
+from sklearn.cluster import KMeans, DBSCAN, SpectralClustering
 from sklearn import metrics
+from sklearn.decomposition import PCA
+import torch
+from torch.utils.data import TensorDataset, DataLoader
+import torch.optim as optim
+import torch.nn as nn
+from model import MLP
 
 
 def transform(fpath, tdir, extname):
@@ -67,10 +73,11 @@ def file_cluster(fobjs: List[FileInfo]):
         fobj.set_wordvec(words)
         all_wordvec.append(fobj.wordvec)
 
-    # pca
+    # pca make fingerprints
     pca = PCA(n_components=20)
     fprints = pca.fit_transform(all_wordvec)
-    print(pca.explained_variance_ratio_)
+    print('PCA ratio sum:', sum(pca.explained_variance_ratio_))
+    print()
     # fprints = all_wordvec
 
     # do cluster
@@ -95,3 +102,80 @@ def file_cluster(fobjs: List[FileInfo]):
     labels = cluster_model.labels_
 
     return labels
+
+
+def file_classify_demo(fobjs: List[FileInfo]):
+    words = {}
+    for fobj in filter(lambda x: not x.istest, fobjs):
+        for kw, freq in zip(fobj.keywords, fobj.kwfreq):
+            if kw in words:
+                words[kw] += freq
+            else:
+                words[kw] = freq
+
+    # make keyword score vec: train and test
+    all_wordvec = []
+    all_wordvec_test = []
+    labels = []
+    for fobj in fobjs:
+        fobj.set_wordvec(words)
+        if not fobj.istest:
+            all_wordvec.append(fobj.wordvec)
+            labels.append(fobj.label)
+            # curlabel = [0] * 5
+            # curlabel[fobj.label] = 1
+            # labels.append(curlabel)
+        else:
+            all_wordvec_test.append(fobj.wordvec)
+
+    # pca make fingerprints
+    pca = PCA(n_components=20)
+    pca.fit(all_wordvec)
+    fprints = pca.transform(all_wordvec)
+    fprints_test = pca.transform(all_wordvec_test)
+    print('PCA ratio sum:', sum(pca.explained_variance_ratio_))
+    print()
+
+    x_train = torch.from_numpy(fprints).float()
+    x_test = torch.from_numpy(fprints_test).float()
+    y_train = torch.Tensor(labels).long()  # float()
+
+    train_dataset = TensorDataset(x_train, y_train)
+    dloader = DataLoader(train_dataset, batch_size=6, shuffle=True)
+
+    model = MLP()
+    optimizer = optim.Adam(model.parameters(), lr=0.05)
+    lossfunc = nn.CrossEntropyLoss()
+
+    epoch = 50
+    for ecnt in range(epoch):
+        print('Epoch:', ecnt)
+        for i, data in enumerate(dloader):
+            optimizer.zero_grad()
+            inputs, labels = data
+            inputs = torch.autograd.Variable(inputs)
+            labels = torch.autograd.Variable(labels)
+
+            outputs = model(inputs)
+            loss = lossfunc(outputs, labels)  # / outputs.size()[0]
+            # loss = torch.Tensor([0])
+            # for b in range(outputs.size()[0]):
+            #     loss += sum(abs(outputs[b] - labels[b]))
+            # loss /= outputs.size()[0]
+
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
+            optimizer.step()
+
+            # if i % 1 == 0:
+            #     print(i, ":", loss)
+            #     print(outputs)
+            #     print(labels)
+
+        # y_train_step = model(x_train)
+        # y_train_step_label = np.argmax(y_train_step.data)
+
+    y_train_look = model(x_train)
+    y_test = model(x_test)
+    print(y_train_look)
+    print(y_test)

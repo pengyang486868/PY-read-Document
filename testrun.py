@@ -43,6 +43,12 @@ if reanalysis:
     conn.write_file_info(resultdf)
     print('del', str(cnt), 'write', str(len(resultdf)))
 
-print('cluster')
+# load from db
 fobjs = conn.get_file_info(returnobj=True)
-core.file_cluster(fobjs)
+
+# print('cluster')
+# cluster_result = core.file_cluster(fobjs)
+# print(cluster_result)
+
+print('classify')
+core.file_classify_demo(fobjs)
