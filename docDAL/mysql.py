@@ -49,3 +49,8 @@ def clear_file_info():
 def write_file_info(data: pd.DataFrame):
     dw = get_dw_engine()
     data.to_sql('file_info', dw, if_exists='append', index=False, method="multi")
+
+
+def write_img_info(data: pd.DataFrame):
+    dw = get_dw_engine()
+    data.to_sql('file_image', dw, if_exists='append', index=False, method="multi")

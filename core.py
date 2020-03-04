@@ -4,6 +4,7 @@ from pptapi import readppt, transppt
 from pdfapi import readpdf
 import utils
 import config
+import uuid
 import numpy as np
 from model import FileInfo
 from typing import List
@@ -27,9 +28,9 @@ def transform(fpath, tdir, extname):
     return False
 
 
-def analysis(fpath, extname):
+def analysis(fpath, extname, imgdir):
     content = None
-    images=[]
+    images = []
 
     kw_arr = []
     freq_arr = []
@@ -48,8 +49,10 @@ def analysis(fpath, extname):
 
     if extname == '.pptx':
         content = readppt.readtxt(fpath)
+        images = readppt.readimg(fpath, imgdir, str(uuid.uuid4()))
     if extname == '.ppt':
         content = readppt.readtxt(fpath + 'x')
+        images = readppt.readimg(fpath + 'x', imgdir, str(uuid.uuid4()))
 
     if extname == '.pdf':
         content = readpdf.readtext(fpath)
@@ -69,7 +72,8 @@ def analysis(fpath, extname):
         sum_arr = utils.get_summary(content, n=6)
 
     return (','.join(kw_arr), ','.join(freq_arr),
-            ','.join(ph_arr), ','.join(nw_arr), ','.join(sum_arr)
+            ','.join(ph_arr), ','.join(nw_arr), ','.join(sum_arr),
+            images
             )
 
 
