@@ -29,8 +29,13 @@ def transform(fpath, tdir, extname):
 
 def analysis(fpath, extname):
     content = None
-    kw = []
-    farr = []
+    images=[]
+
+    kw_arr = []
+    freq_arr = []
+    ph_arr = []
+    nw_arr = []
+    sum_arr = []
 
     # do extract below
     if extname == '.txt':
@@ -51,11 +56,21 @@ def analysis(fpath, extname):
 
     # do analysis
     if content is not None:
-        kw = utils.get_keywords(content, config.kw_topk)
+        # key words
+        kw_arr = utils.get_keywords(content, config.kw_topk)
+        # frequency array
         freq = utils.get_freq(content)
-        farr = list(map(lambda x: str(freq[x]) if x in freq else 0, kw))
+        freq_arr = list(map(lambda x: str(freq[x]) if x in freq else 0, kw_arr))
+        # key phrases
+        ph_arr = utils.get_phrase(content, n=10)
+        # new words
+        nw_arr = utils.get_newwords(content, n=50)
+        # auto summary
+        sum_arr = utils.get_summary(content, n=6)
 
-    return ','.join(kw), ','.join(farr)
+    return (','.join(kw_arr), ','.join(freq_arr),
+            ','.join(ph_arr), ','.join(nw_arr), ','.join(sum_arr)
+            )
 
 
 def file_cluster(fobjs: List[FileInfo]):

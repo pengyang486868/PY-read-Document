@@ -34,9 +34,10 @@ if reanalysis:
         fname = ext_tuple[0]
         extname = ext_tuple[1]
         fpath = os.path.join(filedir, fullname)
-        kwords, kwfreq = core.analysis(fpath, extname)
+        kwords, kwfreq, pharr, nwarr, sumarr = core.analysis(fpath, extname)
         result.append({'id': indx + 100, 'fname': fname, 'extname': extname, 'username': username,
-                       'keywords': str(kwords), 'kwfreq': kwfreq})
+                       'keywords': kwords, 'kwfreq': kwfreq,
+                       'phrase': pharr, 'newwords': nwarr, 'summary': sumarr})
 
     resultdf = pd.DataFrame(result)
     cnt = conn.clear_file_info()

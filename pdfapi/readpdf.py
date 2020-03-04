@@ -1,9 +1,10 @@
 import pdfplumber
 from collections import Counter
-from .pdf2pic import transpic
 from ocrapi import baidu as ocr
 import config
 import os, uuid
+
+from .pdf2pic import transpic
 
 
 # can extract text fields

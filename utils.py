@@ -32,3 +32,24 @@ def get_freq(t):
     params = {'t': t}
     response = post_action(url, params)
     return response['result']
+
+
+def get_phrase(t,n=10):
+    url = config.nlpserver + '/keyw/phrases'
+    params = {'wn': n, 't': t}
+    response = post_action(url, params)
+    return response['result']
+
+
+def get_newwords(t,n=10):
+    url = config.nlpserver + '/keyw/newwords'
+    params = {'wn': n, 't': t}
+    response = post_action(url, params)
+    return response['result']
+
+
+def get_summary(t,n=5):
+    url = config.nlpserver + '/summary/auto'
+    params = {'wn': n, 't': t}
+    response = post_action(url, params)
+    return response['result']
