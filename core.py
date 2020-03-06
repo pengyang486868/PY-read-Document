@@ -67,9 +67,14 @@ def analysis(fpath, extname, imgdir):
         # key phrases
         ph_arr = utils.get_phrase(content, n=10)
         # new words
-        nw_arr = utils.get_newwords(content, n=50)
+        nw_arr = utils.get_newwords(content, n=20)
         # auto summary
-        sum_arr = utils.get_summary(content, n=6)
+        sum_arr = utils.get_summary(content, n=5)
+
+    # give keywords to images
+    # ['fname', 'keywords', 'relatedtxt']
+    for cimg in images:
+        cimg['keywords'] = ','.join(utils.get_keywords([cimg['relatedtxt']], config.kw_topk_image))
 
     return (','.join(kw_arr), ','.join(freq_arr),
             ','.join(ph_arr), ','.join(nw_arr), ','.join(sum_arr),

@@ -8,7 +8,7 @@ import os
 import config
 
 if __name__ == '__main__':
-    pptxpath = r'D:/2020增补-2019彭阳年终.pptx'
+    pptxpath = r'D:\filedata\uname\f/C-quality-03+建筑工程质量与安全培训PPT.pptx'
     # pdfpath = r'D:/data/pt.pdf'
     pdfpath = r'D:/filedata/test.pdf'
     pdftxtpath = r'D:/data/pdftxt.pdf'
@@ -17,11 +17,11 @@ if __name__ == '__main__':
     resultdir = r'D:/result'
 
     username = config.test_username
-    imgdir = os.path.join(config.root_dir, username, 'image')
+    imgdir = os.path.join(config.root_dir, username, 'image-test')
 
     # pdftxt = readpdf.readtext(pdfpath)
     # pdftxt = readpdf.readbyocr(pdfpath)
-    curimg = readimg(pptxpath, imgdir, 'khqkjjl')
+    curimg = readimg(pptxpath, imgdir, 'test')
 
     # cntarr = [1] * 5 + [3] * 3 + [11] * 4 + [12] * 6 + [13] * 48 + [14] * 24 + \
     #          [15] * 30 + [16] * 10 + [17] * 2 + [18]

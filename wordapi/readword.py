@@ -21,7 +21,7 @@ def readtxt(full_path):
     return result
 
 
-def readimg(full_path, resultdir):
+def readimg(full_path, savedir, save_prefix=''):
     doc = Document(full_path)
     doc_part = doc.part
     count = 0
@@ -30,7 +30,8 @@ def readimg(full_path, resultdir):
         rID = blip.embed
         image_part = doc_part.related_parts[rID]
 
-        fr = open(os.path.join(resultdir, rID + '.png'), "wb")
+        # save
+        fr = open(os.path.join(savedir, rID + '.png'), "wb")
         fr.write(image_part._blob)
         fr.close()
         count += 1
