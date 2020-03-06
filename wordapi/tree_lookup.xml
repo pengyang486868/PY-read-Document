@@ -1,0 +1,65 @@
+<w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:ve="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" w:rsidR="00642F06" w:rsidP="00642F06">
+  <w:pPr>
+    <w:pStyle w:val="NormalWeb"/>
+    <w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+    <w:spacing w:line="360" w:lineRule="auto"/>
+    <w:ind w:firstLine="465"/>
+    <w:jc w:val="center"/>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:eastAsiaTheme="minorEastAsia" w:cs="Times New Roman"/>
+      <w:kern w:val="2"/>
+      <w:sz w:val="21"/>
+      <w:szCs w:val="22"/>
+    </w:rPr>
+  </w:pPr>
+  <w:r>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:eastAsiaTheme="minorEastAsia" w:cs="Times New Roman"/>
+      <w:noProof/>
+      <w:kern w:val="2"/>
+      <w:sz w:val="21"/>
+      <w:szCs w:val="22"/>
+    </w:rPr>
+    <w:drawing>
+      <wp:inline distT="0" distB="0" distL="0" distR="0">
+        <wp:extent cx="3962400" cy="2886075"/>
+        <wp:effectExtent l="0" t="0" r="0" b="9525"/>
+        <wp:docPr id="3" name="图片 3"/>
+        <wp:cNvGraphicFramePr>
+          <a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/>
+        </wp:cNvGraphicFramePr>
+        <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+          <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+            <pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+              <pic:nvPicPr>
+                <pic:cNvPr id="413471130" name="3.bmp"/>
+                <pic:cNvPicPr/>
+              </pic:nvPicPr>
+              <pic:blipFill>
+                <a:blip xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:embed="rId5">
+                  <a:extLst>
+                    <a:ext xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" uri="{28A0092B-C50C-407E-A947-70E740481C1C}">
+                      <a14:useLocalDpi xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" val="0"/>
+                    </a:ext>
+                  </a:extLst>
+                </a:blip>
+                <a:stretch>
+                  <a:fillRect/>
+                </a:stretch>
+              </pic:blipFill>
+              <pic:spPr>
+                <a:xfrm>
+                  <a:off x="0" y="0"/>
+                  <a:ext cx="3962400" cy="2886075"/>
+                </a:xfrm>
+                <a:prstGeom prst="rect">
+                  <a:avLst/>
+                </a:prstGeom>
+              </pic:spPr>
+            </pic:pic>
+          </a:graphicData>
+        </a:graphic>
+      </wp:inline>
+    </w:drawing>
+  </w:r>
+</w:p>

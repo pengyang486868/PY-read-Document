@@ -24,15 +24,23 @@ def readtxt(full_path):
 def readimg(full_path, savedir, save_prefix=''):
     doc = Document(full_path)
     doc_part = doc.part
-    count = 0
+    imgcount = 0
+
+    imginfo = []
     for ishape in doc.inline_shapes:
+        imgcount += 1
         blip = ishape._inline.graphic.graphicData.pic.blipFill.blip
         rID = blip.embed
         image_part = doc_part.related_parts[rID]
 
         # save
-        fr = open(os.path.join(savedir, rID + '.png'), "wb")
+        fname = save_prefix + '-' + str(imgcount) + '-' + rID + '.png'
+        fr = open(os.path.join(savedir, fname), "wb")
         fr.write(image_part._blob)
         fr.close()
-        count += 1
-    return count
+
+        # find related text
+        imginfo.append(
+            {'fname': fname, 'relatedtxt': ''})
+
+    return imginfo

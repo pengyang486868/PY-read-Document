@@ -13,7 +13,7 @@ if __name__ == '__main__':
     pdfpath = r'D:/filedata/test.pdf'
     pdftxtpath = r'D:/data/pdftxt.pdf'
     dxfpath = r'D:/data/dxftest.dxf'
-    wordpath = r'D:/data/wordtxt.docx'
+    wordpath = r'D:\filedata\uname\f/M-bimsys-07+BIM在建筑运维管理中应用.docx'
     resultdir = r'D:/result'
 
     username = config.test_username
@@ -21,7 +21,10 @@ if __name__ == '__main__':
 
     # pdftxt = readpdf.readtext(pdfpath)
     # pdftxt = readpdf.readbyocr(pdfpath)
-    curimg = readimg(pptxpath, imgdir, 'test')
+    # curimg = readword.readimg(wordpath, imgdir, 'test')
+    transtest_origin = r'D:\data\newexp-word03test.doc'
+    transtest_target = r'D:\data'
+    transdoc.doc2docx(transtest_origin, transtest_target)
 
     # cntarr = [1] * 5 + [3] * 3 + [11] * 4 + [12] * 6 + [13] * 48 + [14] * 24 + \
     #          [15] * 30 + [16] * 10 + [17] * 2 + [18]

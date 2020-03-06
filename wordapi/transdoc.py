@@ -11,11 +11,19 @@ def doc2docx(path: str, newdir: str, remove=False):
 
     doc = w.Documents.Open(path)
     # newpath = path + 'x'
-    newpath = os.path.join(newdir, os.path.split(path)[1] + 'x')
-    doc.SaveAs(newpath, 16, False, "", True, "", False, False, False, False)
+    # newpath = os.path.join(newdir, os.path.split(path)[1] + 'x')
+    noext = os.path.join(newdir, os.path.splitext(os.path.split(path)[1])[0])
+    newpath = noext + '.htm'
+    doc.SaveAs2(newpath, 8)  # , False, "", True, "", False, False, False, False
+    # doc.SaveAs2(newpath, 16, False, '', True, '', False, True, True, True, True, None, False, False, 4, True, 15)
     doc.Close()
+
+    dochtml = w.Documents.Open(newpath)
+    dochtml.SaveAs2(noext + '.docx', 16)
+
     w.Quit()
 
+    os.remove(newpath)
     if remove:
         os.remove(path)
     return True, newpath
