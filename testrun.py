@@ -43,7 +43,7 @@ if reanalysis:
         imgresult += curimg
 
     resultdf = pd.DataFrame(result)
-    imgresultdf = pd.DataFrame(imgresult)[['fname', 'keywords', 'relatedtxt']]
+    imgresultdf = pd.DataFrame(imgresult)[['fname', 'keywords', 'newwords', 'relatedtxt', 'docname']]
     cnt = conn.clear_file_info()
     conn.write_file_info(resultdf)
     conn.write_img_info(imgresultdf)

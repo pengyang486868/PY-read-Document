@@ -8,12 +8,12 @@ import os
 import config
 
 if __name__ == '__main__':
-    pptxpath = r'D:\filedata\uname\f/C-quality-03+建筑工程质量与安全培训PPT.pptx'
+    pptxpath = r'D:\filedata\uname\f/C-technical-05+第二节-混凝土灌注桩施工.pptx'
     # pdfpath = r'D:/data/pt.pdf'
     pdfpath = r'D:/filedata/test.pdf'
     pdftxtpath = r'D:/data/pdftxt.pdf'
     dxfpath = r'D:/data/dxftest.dxf'
-    wordpath = r'D:\filedata\uname\f/M-bimsys-07+BIM在建筑运维管理中应用.docx'
+    wordpath = r'D:\filedata\uname\f/M-bimsys-04+杭州BIM系统.docx'
     resultdir = r'D:/result'
 
     username = config.test_username
@@ -21,7 +21,9 @@ if __name__ == '__main__':
 
     # pdftxt = readpdf.readtext(pdfpath)
     # pdftxt = readpdf.readbyocr(pdfpath)
-    curimg = readword.readimg(wordpath, imgdir, 'test')
+
+    # curimg = readword.readimg(wordpath, imgdir, 'test')
+    curimg = readimg(pptxpath, imgdir, 'test')
 
     # transtest_origin = r'D:\data\newexp-word03test.doc'
     # transtest_target = r'D:\data'

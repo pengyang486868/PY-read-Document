@@ -60,3 +60,10 @@ def get_summary(t, n=5):
     params = {'wn': n, 't': t}
     response = post_action(url, params)
     return response['result']
+
+
+def get_namedwords(t):
+    url = config.nlpserver + '/keyw/namedwords'
+    params = {'t': t}
+    response = post_action(url, params)
+    return response['result']

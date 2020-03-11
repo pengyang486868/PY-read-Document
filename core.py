@@ -82,7 +82,9 @@ def analysis(fpath, extname, imgdir):
 
     kwdic = utils.get_keywordsmany(makeparam, config.kw_topk_image)
     for cimg in images:
-        cimg['keywords'] = ','.join(kwdic[cimg['fname']])
+        cimg['keywords'] = ','.join(kwdic[cimg['fname']][0])
+        cimg['newwords'] = ','.join(kwdic[cimg['fname']][1])
+        cimg['docname'] = fpath
 
     return (','.join(kw_arr), ','.join(freq_arr),
             ','.join(ph_arr), ','.join(nw_arr), ','.join(sum_arr),

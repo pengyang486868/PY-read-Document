@@ -8,17 +8,17 @@ def readtxt(full_path):
     result = []
     for para in doc.paragraphs:
         result.append(para.text)
-    # # 表格
-    # tbs = doc.tables
-    # for tb in tbs:
-    #     for row in tb.rows:
-    #         for cell in row.cells:
-    #             print(cell.text)
-    #             # or
-    #             '''text = ''
-    #             for p in cell.paragraphs:
-    #                 text += p.text
-    #             print(text)'''
+
+    # table text
+    for tb in doc.tables:
+        for row in tb.rows:
+            for cell in row.cells:
+                result.append(cell.text)
+                # # or
+                # '''text = ''
+                # for p in cell.paragraphs:
+                #     text += p.text
+                # print(text)'''
     return result
 
 
@@ -31,25 +31,31 @@ def readimg(full_path, savedir, save_prefix=''):
     notemptyp = []
     for p in doc.paragraphs:
         xmlstr = p._p.xml
-        if 'graphicData' in xmlstr or len(p.text) > 0:
+        if 'graphicData' in xmlstr or len(p.text.split()) > 0:
             notemptyp.append(p)
 
+    # give text to graphic paragraphs
     contextdic = {}
+    last_text = ''
     for indx, p in enumerate(notemptyp):
         xmlstr = p._p.xml
-        if not 'graphicData' in xmlstr:
-            continue
+        if 'graphicData' not in xmlstr:
+            if len(p.text.split()) > 0:
+                last_text = p.text
 
-        # r:embed="rId5"
+        # format: ===r:embed="rId5"===
         ridreg = re.compile(r'r:embed="(.*)"')
         cur_rids = ridreg.findall(xmlstr)
         if len(cur_rids) < 1:
             continue
-        if indx < 1 or doc.paragraphs[indx + 1].text.startswith('图'):
-            contextdic[cur_rids[0]] = doc.paragraphs[indx + 1].text
+        if notemptyp[indx + 1].text.startswith('图'):
+            contextdic[cur_rids[0]] = notemptyp[indx + 1].text
+        elif indx < 1:
+            contextdic[cur_rids[0]] = os.path.split(full_path)[1]
         else:
-            contextdic[cur_rids[0]] = doc.paragraphs[indx - 1].text
+            contextdic[cur_rids[0]] = last_text
 
+    # fill image info
     imginfo = []
     for ishape in doc.inline_shapes:
         imgcount += 1
@@ -60,7 +66,7 @@ def readimg(full_path, savedir, save_prefix=''):
         # save
         fname = save_prefix + '-' + str(imgcount) + '-' + rID + '.png'
         fr = open(os.path.join(savedir, fname), "wb")
-        fr.write(image_part._blob)
+        fr.write(image_part.blob)
         fr.close()
 
         # find related text

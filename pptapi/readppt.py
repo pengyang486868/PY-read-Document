@@ -24,9 +24,13 @@ def readimg(path, savedir, save_prefix=''):
 
     coordinate_scale = 10000  # prevent out of float
 
+    last_text = ''
     for indx, slide in enumerate(ppt.slides):
+        # if indx == 41:
+        #     print()
         txtinfo_slide = []
         imginfo_slide = []
+        curtext = []
         for shape in slide.shapes:
             if not shape.has_text_frame:
                 if hasattr(shape, 'image'):
@@ -42,6 +46,7 @@ def readimg(path, savedir, save_prefix=''):
                         f.write(shape.image.blob)
                         f.close()
             else:
+                curtext.append(shape.text)
                 if len(shape.text_frame.paragraphs[0].runs) < 1:
                     continue
                 fontsize = 18.0
@@ -68,17 +73,27 @@ def readimg(path, savedir, save_prefix=''):
         # find best related text
         min_related_text = 5
         for cimg in imginfo_slide:
-            if not txtinfo_slide:
+            if not txtinfo_slide:  # no text then give latest page text
+                cimg['relatedtxt'] = last_text
                 continue
             sorted_txt = sorted(txtinfo_slide,
-                                key=lambda t: abs(t['x'] - cimg['x']) + abs(t['y'] - cimg['y']))  # / t['ftsize']
+                                key=lambda t: distance_score(t['x'], t['y'], cimg['x'], cimg['y'], t['ftsize']))
             if len(sorted_txt) < 2 or len(sorted_txt[0]['text']) > min_related_text:
                 cimg['relatedtxt'] = sorted_txt[0]['text']
             else:
                 cimg['relatedtxt'] = sorted_txt[0]['text'] + ',' + sorted_txt[1]['text']
 
+        curtext = '\n'.join(curtext)
+        if len(curtext) > 1:
+            last_text = curtext
+
+        # add info in this slide to final result
         imginfo += imginfo_slide
     return imginfo
+
+
+def distance_score(tx, ty, imgx, imgy, tfontsize):
+    return abs(tx - imgx) + abs(ty - imgy)  # /tfontsize
 
 
 # not in use, for experiment
