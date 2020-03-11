@@ -21,10 +21,11 @@ if __name__ == '__main__':
 
     # pdftxt = readpdf.readtext(pdfpath)
     # pdftxt = readpdf.readbyocr(pdfpath)
-    # curimg = readword.readimg(wordpath, imgdir, 'test')
-    transtest_origin = r'D:\data\newexp-word03test.doc'
-    transtest_target = r'D:\data'
-    transdoc.doc2docx(transtest_origin, transtest_target)
+    curimg = readword.readimg(wordpath, imgdir, 'test')
+
+    # transtest_origin = r'D:\data\newexp-word03test.doc'
+    # transtest_target = r'D:\data'
+    # transdoc.doc2docx(transtest_origin, transtest_target)
 
     # cntarr = [1] * 5 + [3] * 3 + [11] * 4 + [12] * 6 + [13] * 48 + [14] * 24 + \
     #          [15] * 30 + [16] * 10 + [17] * 2 + [18]

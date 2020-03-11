@@ -1,6 +1,6 @@
 from win32com import client
 import os
-
+import shutil
 
 def doc2docx(path: str, newdir: str, remove=False):
     if not path.endswith('.doc'):
@@ -23,7 +23,11 @@ def doc2docx(path: str, newdir: str, remove=False):
 
     w.Quit()
 
+    # remove html middle files
     os.remove(newpath)
+    shutil.rmtree(noext + '.files')
+
+    # remove raw file or not
     if remove:
         os.remove(path)
     return True, newpath

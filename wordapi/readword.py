@@ -1,5 +1,6 @@
 from docx import Document
 import os
+import re
 
 
 def readtxt(full_path):
@@ -26,6 +27,29 @@ def readimg(full_path, savedir, save_prefix=''):
     doc_part = doc.part
     imgcount = 0
 
+    # delete empty paragraphs
+    notemptyp = []
+    for p in doc.paragraphs:
+        xmlstr = p._p.xml
+        if 'graphicData' in xmlstr or len(p.text) > 0:
+            notemptyp.append(p)
+
+    contextdic = {}
+    for indx, p in enumerate(notemptyp):
+        xmlstr = p._p.xml
+        if not 'graphicData' in xmlstr:
+            continue
+
+        # r:embed="rId5"
+        ridreg = re.compile(r'r:embed="(.*)"')
+        cur_rids = ridreg.findall(xmlstr)
+        if len(cur_rids) < 1:
+            continue
+        if indx < 1 or doc.paragraphs[indx + 1].text.startswith('图'):
+            contextdic[cur_rids[0]] = doc.paragraphs[indx + 1].text
+        else:
+            contextdic[cur_rids[0]] = doc.paragraphs[indx - 1].text
+
     imginfo = []
     for ishape in doc.inline_shapes:
         imgcount += 1
@@ -40,7 +64,7 @@ def readimg(full_path, savedir, save_prefix=''):
         fr.close()
 
         # find related text
-        imginfo.append(
-            {'fname': fname, 'relatedtxt': ''})
+        imginfo.append({'fname': fname,
+                        'relatedtxt': contextdic[rID] if rID in contextdic else ''})
 
     return imginfo

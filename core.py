@@ -44,8 +44,10 @@ def analysis(fpath, extname, imgdir):
 
     if extname == '.docx':
         content = readword.readtxt(fpath)
+        images = readword.readimg(fpath, imgdir, str(uuid.uuid4()))
     if extname == '.doc':
         content = readword.readtxt(fpath + 'x')
+        images = readword.readimg(fpath + 'x', imgdir, str(uuid.uuid4()))
 
     if extname == '.pptx':
         content = readppt.readtxt(fpath)
@@ -61,7 +63,7 @@ def analysis(fpath, extname, imgdir):
     if content is not None:
         # key words
         kw_arr = utils.get_keywords(content, config.kw_topk)
-        # frequency array
+        # word frequency array
         freq = utils.get_freq(content)
         freq_arr = list(map(lambda x: str(freq[x]) if x in freq else 0, kw_arr))
         # key phrases
@@ -73,8 +75,14 @@ def analysis(fpath, extname, imgdir):
 
     # give keywords to images
     # ['fname', 'keywords', 'relatedtxt']
+    makeparam = {}
     for cimg in images:
-        cimg['keywords'] = ','.join(utils.get_keywords([cimg['relatedtxt']], config.kw_topk_image))
+        # cimg['keywords'] = ','.join(utils.get_keywords([cimg['relatedtxt']], config.kw_topk_image))
+        makeparam[cimg['fname']] = cimg['relatedtxt']
+
+    kwdic = utils.get_keywordsmany(makeparam, config.kw_topk_image)
+    for cimg in images:
+        cimg['keywords'] = ','.join(kwdic[cimg['fname']])
 
     return (','.join(kw_arr), ','.join(freq_arr),
             ','.join(ph_arr), ','.join(nw_arr), ','.join(sum_arr),
