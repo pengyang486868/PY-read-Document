@@ -1,9 +1,7 @@
 import math
-import torch.nn as nn
-import torch.nn.functional as F
 
 
-class FileInfoBase():
+class FileInfoBase:
     def __init__(self):
         self.id = 0
         self.fname = ''
@@ -16,6 +14,8 @@ class FileInfo(FileInfoBase):
         super().__init__()
         self.keywords = []
         self.kwfreq = []
+        self.phrase = []
+        self.newwords = []
         self.istest = False
         self.label = 0
         self.wordvec = []
@@ -42,14 +42,25 @@ class FileInfo(FileInfoBase):
         return freq / flen * math.log(allwords / freq)
 
 
-class MLP(nn.Module):
+class SearchResultBase:
     def __init__(self):
-        super(MLP, self).__init__()
-        self.fc1 = nn.Linear(20, 5)
-        # self.fc2 = nn.Linear(5, 5)
+        self.fpath = ''
+        self.score = 0
+        self.scoredetail = None
 
-    def forward(self, din):
-        # din = din.view(-1, 28 * 28)
-        h1 = F.relu(self.fc1(din))
-        # dout = F.relu(self.fc2(h1))
-        return h1  # F.softmax(dout)
+    def __str__(self):
+        return self.fpath + ' | ' + str(self.score)
+
+
+class NormalSearchResult(SearchResultBase):
+    def __init__(self):
+        super().__init__()
+        self.sword = ''
+
+
+class NaturalSearchResult(SearchResultBase):
+    def __init__(self):
+        super().__init__()
+        self.sentence = ''
+        self.words = []
+        self.restrict = None

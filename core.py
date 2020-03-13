@@ -15,9 +15,13 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader
 import torch.optim as optim
 import torch.nn as nn
-from model import MLP
+from networks import MLP
+from model import NormalSearchResult, NaturalSearchResult
+import math
+from datetime import datetime
 
 
+# transform file format
 def transform(fpath, tdir, extname):
     if extname == '.doc':
         transdoc.doc2docx(fpath, tdir, remove=False)
@@ -30,6 +34,7 @@ def transform(fpath, tdir, extname):
     return False
 
 
+# analysis file to structure data
 def analysis(fpath, extname, imgdir):
     content = None
     images = []
@@ -94,6 +99,7 @@ def analysis(fpath, extname, imgdir):
             )
 
 
+# clustering
 def file_cluster(fobjs: List[FileInfo]):
     words = {}
     for fobj in fobjs:
@@ -140,6 +146,7 @@ def file_cluster(fobjs: List[FileInfo]):
     return labels
 
 
+# demo for AI classify: train and output
 def file_classify_demo(fobjs: List[FileInfo]):
     words = {}
     for fobj in filter(lambda x: not x.istest, fobjs):
@@ -215,3 +222,74 @@ def file_classify_demo(fobjs: List[FileInfo]):
     y_test = model(x_test)
     print(y_train_look)
     print(y_test)
+
+
+# basic search by word
+def search_basic(inputword, fobjs: List[FileInfo]):
+    start = datetime.now()
+    nfile = len(fobjs)
+    words = {}
+    for fobj in fobjs:
+        for kw, freq in zip(fobj.keywords, fobj.kwfreq):
+            if kw in words:
+                words[kw] += freq
+            else:
+                words[kw] = freq
+
+    # swords = utils.get_keywords(word, 10)
+    swords = inputword.split(' ')
+    result = []
+    for fo in fobjs:
+        currentresult = NormalSearchResult()
+        currentresult.fpath = fo.fname
+        currentresult.sword = inputword
+        flen_param = 1/math.log(sum(fo.kwfreq), 2)
+        phlenparam=1/len(fo.phrase)
+        nwlenparam=1/len(fo.newwords)
+
+        score_keyword = 0
+        score_phrase = 0
+        score_namedentity = 0
+        beta_p = 2.0
+        beta_n = 4.0
+        for sw in swords:
+            # match keywords
+            for indx, (w, fw) in enumerate(zip(fo.keywords, fo.kwfreq)):
+                if w == sw:
+                    score_keyword += nfile * fw / words[w] * flen_param * pow(2, (-1 * indx / 10))
+
+            # match phrase
+            for ph in fo.phrase:
+                score_phrase += phlenparam*beta_p * str_similar(sw, ph)
+
+            # match named entities
+            for ne in fo.newwords:
+                score_namedentity += nwlenparam*beta_n * str_similar(sw, ne)
+
+        currentresult.score = score_keyword + score_phrase + score_namedentity
+        currentresult.scoredetail = (score_keyword, score_phrase, score_namedentity)
+        result.append(currentresult)
+
+    result = list(filter(lambda x: x.score > 0, result))
+    result.sort(key=lambda x: x.score, reverse=True)
+    totaltime = (datetime.now() - start).total_seconds()
+    return result, totaltime
+
+
+def search_natural(sentence, fobjs: List[FileInfo]):
+    relwords = ['和', '或', '不']
+    pass
+
+
+def str_similar(s1: str, s2: str) -> float:
+    if len(s1) < 1 or len(s2) < 1:
+        return 0
+    if s1 in s2:
+        return len(s1) / len(s2)
+    if s2 in s1:
+        return len(s2) / len(s1)
+    return 0
+
+
+def recommand(word, fobjs: List[FileInfo]):
+    pass
