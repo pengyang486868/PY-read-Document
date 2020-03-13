@@ -25,6 +25,8 @@ def transform(fpath, tdir, extname):
     if extname == '.ppt':
         transppt.ppt2pptx(fpath, tdir, remove=False)
         return True
+    if extname == '.dwg':
+        return True
     return False
 
 
