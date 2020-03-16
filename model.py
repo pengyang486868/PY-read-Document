@@ -42,6 +42,15 @@ class FileInfo(FileInfoBase):
         return freq / flen * math.log(allwords / freq)
 
 
+class ImageInfo:
+    def __init__(self):
+        self.id = 0
+        self.fname = ''
+        self.docname = ''
+        self.keywords = []
+        self.newwords = []
+
+
 class SearchResultBase:
     def __init__(self):
         self.fpath = ''

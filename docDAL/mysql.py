@@ -2,7 +2,7 @@ import os
 from sqlalchemy import create_engine
 import pandas as pd
 import config
-from model import FileInfo
+from model import FileInfo, ImageInfo
 
 
 def get_dw_constr():
@@ -51,6 +51,33 @@ def clear_file_info():
 def write_file_info(data: pd.DataFrame):
     dw = get_dw_engine()
     data.to_sql('file_info', dw, if_exists='append', index=False, method="multi")
+
+
+def get_img_info(returnobj=False):
+    dw = get_dw_engine()
+    query = '''
+        SELECT * FROM file_image
+    '''
+    data = pd.read_sql_query(query, dw)
+
+    if not returnobj:
+        return data
+
+    objs = []
+    for indx, row in data.iterrows():
+        curobj = ImageInfo()
+        curobj.id = row['id']
+        curobj.fname = row['fname']
+        curobj.keywords = row['keywords'].split(',')
+        curobj.newwords = row['newwords'].split(',')
+        objs.append(curobj)
+    return objs
+
+
+def clear_img_info():
+    dw = get_dw_engine()
+    res = dw.execute('DELETE FROM file_image WHERE id>0')
+    return res.rowcount
 
 
 def write_img_info(data: pd.DataFrame):

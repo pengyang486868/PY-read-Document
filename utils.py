@@ -12,6 +12,17 @@ def is_pure_abc(s):
     return True
 
 
+# string similarity
+def str_similar(s1: str, s2: str) -> float:
+    if len(s1) < 1 or len(s2) < 1:
+        return 0
+    if s1 in s2:
+        return len(s1) / len(s2)
+    if s2 in s1:
+        return len(s2) / len(s1)
+    return 0
+
+
 def post_action(url, pdic):
     params = json.dumps(pdic).encode('utf-8')
     headers = {'Accept-Charset': 'utf-8', 'Content-Type': 'application/json'}

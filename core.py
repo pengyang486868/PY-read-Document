@@ -6,7 +6,7 @@ import utils
 import config
 import uuid
 import numpy as np
-from model import FileInfo
+from model import FileInfo, ImageInfo
 from typing import List
 from sklearn.cluster import KMeans, DBSCAN, SpectralClustering
 from sklearn import metrics
@@ -243,9 +243,9 @@ def search_basic(inputword, fobjs: List[FileInfo]):
         currentresult = NormalSearchResult()
         currentresult.fpath = fo.fname
         currentresult.sword = inputword
-        flen_param = 1/math.log(sum(fo.kwfreq), 2)
-        phlenparam=1/len(fo.phrase)
-        nwlenparam=1/len(fo.newwords)
+        flen_param = 1 / math.log(sum(fo.kwfreq), 2)
+        phlenparam = 1 / len(fo.phrase)
+        nwlenparam = 1 / len(fo.newwords)
 
         score_keyword = 0
         score_phrase = 0
@@ -260,12 +260,13 @@ def search_basic(inputword, fobjs: List[FileInfo]):
 
             # match phrase
             for ph in fo.phrase:
-                score_phrase += phlenparam*beta_p * str_similar(sw, ph)
+                score_phrase += phlenparam * beta_p * utils.str_similar(sw, ph)
 
             # match named entities
             for ne in fo.newwords:
-                score_namedentity += nwlenparam*beta_n * str_similar(sw, ne)
+                score_namedentity += nwlenparam * beta_n * utils.str_similar(sw, ne)
 
+        # make result
         currentresult.score = score_keyword + score_phrase + score_namedentity
         currentresult.scoredetail = (score_keyword, score_phrase, score_namedentity)
         result.append(currentresult)
@@ -276,19 +277,14 @@ def search_basic(inputword, fobjs: List[FileInfo]):
     return result, totaltime
 
 
+# natural language search
 def search_natural(sentence, fobjs: List[FileInfo]):
     relwords = ['和', '或', '不']
     pass
 
 
-def str_similar(s1: str, s2: str) -> float:
-    if len(s1) < 1 or len(s2) < 1:
-        return 0
-    if s1 in s2:
-        return len(s1) / len(s2)
-    if s2 in s1:
-        return len(s2) / len(s1)
-    return 0
+def search_img(inputword, imgobjs: List[ImageInfo]):
+    pass
 
 
 def recommand(word, fobjs: List[FileInfo]):
