@@ -56,6 +56,7 @@ class SearchResultBase:
         self.fpath = ''
         self.score = 0
         self.scoredetail = None
+        self.obj = None
 
     def __str__(self):
         return self.fpath + ' | ' + str(self.score)

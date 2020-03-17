@@ -225,7 +225,7 @@ def file_classify_demo(fobjs: List[FileInfo]):
 
 
 # basic search by word
-def search_basic(inputword, fobjs: List[FileInfo]):
+def search_basic(inputword, fobjs: List[FileInfo], givetime=True):
     start = datetime.now()
     nfile = len(fobjs)
     words = {}
@@ -274,17 +274,59 @@ def search_basic(inputword, fobjs: List[FileInfo]):
     result = list(filter(lambda x: x.score > 0, result))
     result.sort(key=lambda x: x.score, reverse=True)
     totaltime = (datetime.now() - start).total_seconds()
+
+    if not givetime:
+        return result
     return result, totaltime
 
 
 # natural language search
 def search_natural(sentence, fobjs: List[FileInfo]):
-    relwords = ['和', '或', '不']
+    relwords = ['和', '或', '不']  # 'and' is actually default
     pass
 
 
-def search_img(inputword, imgobjs: List[ImageInfo]):
-    pass
+# search images normal
+def search_img(inputword, imgobjs: List[ImageInfo], givetime=True):
+    start = datetime.now()
+    nword_min = 3
+
+    swords = inputword.split(' ')
+    result = []
+    for fo in imgobjs:
+        currentresult = NormalSearchResult()
+        currentresult.fpath = fo.fname
+        currentresult.sword = inputword
+        currentresult.obj = fo
+
+        score_keyword = 0
+        score_namedentity = 0
+        beta_k = 2.0
+        beta_n = 4.0
+        kwlenparam = 1 / max(nword_min,len(fo.keywords))
+        nwlenparam = 1 / max(nword_min,len(fo.newwords))
+        for sw in swords:
+            # match keywords
+            for indx, w in enumerate(fo.keywords):
+                if w == sw:
+                    score_keyword += kwlenparam * beta_k * utils.str_similar(sw, w)
+
+            # match named entities
+            for ne in fo.newwords:
+                score_namedentity += nwlenparam * beta_n * utils.str_similar(sw, ne)
+
+        # make result
+        currentresult.score = score_keyword + score_namedentity
+        currentresult.scoredetail = (score_keyword, score_namedentity)
+        result.append(currentresult)
+
+    result = list(filter(lambda x: x.score > 0, result))
+    result.sort(key=lambda x: x.score, reverse=True)
+    totaltime = (datetime.now() - start).total_seconds()
+
+    if not givetime:
+        return result
+    return result, totaltime
 
 
 def recommand(word, fobjs: List[FileInfo]):
