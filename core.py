@@ -282,7 +282,7 @@ def search_basic(inputword, fobjs: List[FileInfo], givetime=True):
 
 # natural language search
 def search_natural(sentence, fobjs: List[FileInfo]):
-    relwords = ['和', '或', '不']  # 'and' is actually default
+    relwords = ['和', '或', '不', '的']  # 'and' is actually default
     pass
 
 
@@ -303,8 +303,8 @@ def search_img(inputword, imgobjs: List[ImageInfo], givetime=True):
         score_namedentity = 0
         beta_k = 2.0
         beta_n = 4.0
-        kwlenparam = 1 / max(nword_min,len(fo.keywords))
-        nwlenparam = 1 / max(nword_min,len(fo.newwords))
+        kwlenparam = 1 / max(nword_min, len(fo.keywords))
+        nwlenparam = 1 / max(nword_min, len(fo.newwords))
         for sw in swords:
             # match keywords
             for indx, w in enumerate(fo.keywords):
@@ -329,5 +329,38 @@ def search_img(inputword, imgobjs: List[ImageInfo], givetime=True):
     return result, totaltime
 
 
-def recommand(word, fobjs: List[FileInfo]):
-    pass
+# recommand simple
+def recommand(thisfile: FileInfo, fobjs: List[FileInfo], rnum=10):
+    words = {}
+    for fobj in fobjs:
+        for kw, freq in zip(fobj.keywords, fobj.kwfreq):
+            if kw in words:
+                words[kw] += freq
+            else:
+                words[kw] = freq
+
+    # make keyword score vec
+    all_wordvec = []
+    for fobj in fobjs:
+        fobj.set_wordvec(words)
+        all_wordvec.append(fobj.wordvec)
+
+    # pca make fingerprints
+    pca = PCA(n_components=20)
+    pca.fit(all_wordvec)
+    for fobj in fobjs:
+        fobj.fingerprint = pca.transform([fobj.wordvec])[0]
+    thisfile.fingerprint = pca.transform([thisfile.wordvec])[0]
+
+    # find nearest
+    distarr = []
+    for fobj in fobjs:
+        if fobj.id == thisfile.id and fobj.fname == thisfile.fname:
+            continue
+        d = np.linalg.norm(np.array(fobj.fingerprint) - np.array(thisfile.fingerprint))
+        distarr.append({'file': fobj, 'dist': d})
+    distarr.sort(key=lambda x: x['dist'])
+
+    if len(distarr) < rnum:
+        return distarr
+    return distarr[0:rnum]

@@ -1,4 +1,5 @@
 import utils
+import numpy as np
 
 
 def test1():
@@ -32,5 +33,10 @@ def test3():
     s = utils.get_namedwords(['案例介绍：      某厂施工中的文化活动站的观众厅，于某年4月14日下午因墙体失稳，拱形钢筋混凝土屋盖塌落，造成了重大事故。'])
 
 
+def test4():
+    a = np.linalg.norm(np.array([1, 2, 3]) - np.array([2, 3, 5]))
+    print(a)
+
+
 if __name__ == '__main__':
-    test3()
+    test4()
