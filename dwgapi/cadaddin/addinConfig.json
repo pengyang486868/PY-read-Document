@@ -1,0 +1,8 @@
+﻿{
+  "SingleFilePath": "",
+  "SingleFileTargetDir": "",
+  "ManyFileDir": "D:\\filedata\\uname\\raw",
+  "ManyFileTargetDir": "D:\\filedata\\uname\\raw",
+  "StopSeconds": "200",
+  "Interval": "5"
+}
