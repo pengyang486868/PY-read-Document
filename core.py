@@ -124,12 +124,12 @@ def file_cluster(fobjs: List[FileInfo]):
 
     # do cluster
     # kmeans
-    # cluster_model = KMeans(n_clusters=6, random_state=1).fit(fprints)
+    # cluster_model = KMeans(n_clusters=3, random_state=1).fit(fprints)
     # labels = cluster_model.labels_
     # sc = metrics.silhouette_score(fprints, labels, metric='euclidean')
 
     # dbscan
-    # cluster_model = DBSCAN(eps=1,  # 邻域半径
+    # cluster_model = DBSCAN(eps=1.2,  # 邻域半径
     #                        min_samples=2,  # 最小样本点数，MinPts
     #                        metric='euclidean',
     #                        metric_params=None,
@@ -140,8 +140,12 @@ def file_cluster(fobjs: List[FileInfo]):
     # labels = cluster_model.labels_
 
     # spectral
-    cluster_model = SpectralClustering(n_clusters=5, gamma=0.1).fit(fprints)
+    cluster_model = SpectralClustering(n_clusters=3, gamma=0.1).fit(fprints)
     labels = cluster_model.labels_
+
+    print(labels)
+
+    utils.plotxy(fprints[:, 0], fprints[:, 1], fprints[:, 2], labels)
 
     return labels
 
@@ -207,7 +211,7 @@ def file_classify_demo(fobjs: List[FileInfo]):
             # loss /= outputs.size()[0]
 
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 5)  # clip param important
             optimizer.step()
 
             # if i % 1 == 0:

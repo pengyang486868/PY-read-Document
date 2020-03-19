@@ -25,7 +25,7 @@ for fullname in fname_arr:
         if not transformed:
             shutil.copy(fpath, filedir)
 
-reanalysis = True
+reanalysis = False
 if reanalysis:
     print('analysis')
     result = []
@@ -49,14 +49,14 @@ if reanalysis:
     conn.write_img_info(imgresultdf)
     print('del', str(cnt), 'write', str(len(resultdf)))
 
-aiq = False
+aiq = True
 if aiq:
     # load from db
     fobjs = conn.get_file_info(returnobj=True)
 
-    # print('cluster')
-    # cluster_result = core.file_cluster(fobjs)
-    # print(cluster_result)
+    print('cluster')
+    cluster_result = core.file_cluster(fobjs)
+    print(cluster_result)
 
-    print('classify')
-    core.file_classify_demo(fobjs)
+    # print('classify')
+    # core.file_classify_demo(fobjs)

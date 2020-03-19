@@ -1,6 +1,9 @@
 import json
 from urllib import request, parse
 import config
+import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
 
 
 def is_pure_abc(s):
@@ -21,6 +24,21 @@ def str_similar(s1: str, s2: str) -> float:
     if s2 in s1:
         return len(s2) / len(s1)
     return 0
+
+
+# plot simple
+def plotxy(xall, yall, zall, clsarr):
+    marks = ['o', 'v', 'd', 's', '*', '+', 'h']
+    allcls = list(set(clsarr))
+    data = list(zip(xall, yall, zall, clsarr))
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    for indx, curcls in enumerate(allcls):
+        curdata = np.array(list(map(list, filter(lambda x: x[3] == curcls, data))))
+        ax.scatter(curdata[:, 0], curdata[:, 1], curdata[:, 2], label=str(curcls), marker=marks[indx], s=80)
+
+    plt.legend()
+    plt.show()
 
 
 def post_action(url, pdic):
