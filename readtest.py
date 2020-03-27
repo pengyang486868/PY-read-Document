@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # pdfpath = r'D:/data/pt.pdf'
     pdfpath = r'D:/filedata/test.pdf'
     pdftxtpath = r'D:/data/pdftxt.pdf'
-    dxfpath = r'D:/data/dxftest.dxf'
+    dxfpath = r'D:\filedata\uname/儿童医院电气-min.dxf'
     wordpath = r'D:\filedata\uname\f/M-bimsys-04+杭州BIM系统.docx'
     resultdir = r'D:/result'
 
@@ -23,7 +23,9 @@ if __name__ == '__main__':
     # pdftxt = readpdf.readbyocr(pdfpath)
 
     # curimg = readword.readimg(wordpath, imgdir, 'test')
-    curimg = readimg(pptxpath, imgdir, 'test')
+    # curimg = readimg(pptxpath, imgdir, 'test')
+
+    r = readdxf.split_drawing_byblock(dxfpath)
 
     # transtest_origin = r'D:\data\newexp-word03test.doc'
     # transtest_target = r'D:\data'
