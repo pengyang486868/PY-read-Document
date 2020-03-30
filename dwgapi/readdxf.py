@@ -1,7 +1,6 @@
 import dxfgrabber
-import utils
-from typing import Tuple
-import math
+
+from .geohelper import *
 
 
 def read_example(full_path):
@@ -143,52 +142,33 @@ def split_drawing(full_path):
 def split_drawing_byblock(full_path):
     dxf = dxfgrabber.readfile(full_path)
 
-    branges = []
-
+    sbcoords = []  # standard block coordinates: left right bottom top
+    sblock_names = []  # standard block names
     for b in dxf.blocks:
-        # block overall range
-        range_xmin = float('inf')
-        range_xmax = float('-inf')
-        range_ymin = float('inf')
-        range_ymax = float('-inf')
-        for e in b:
-            if e.dxftype == 'LINE':
-                if e.start[0] > range_xmax:
-                    range_xmax = e.start[0]
-                if e.start[0] < range_xmin:
-                    range_xmin = e.start[0]
-                if e.start[1] > range_ymax:
-                    range_ymax = e.start[1]
-                if e.start[1] < range_ymin:
-                    range_ymin = e.start[1]
-            if e.dxftype == 'LWPOLYLINE':
-                for p in e.points:
-                    if p[0] > range_xmax:
-                        range_xmax = p[0]
-                    if p[0] < range_xmin:
-                        range_xmin = p[0]
-                    if p[1] > range_ymax:
-                        range_ymax = p[1]
-                    if p[1] < range_ymin:
-                        range_ymin = p[1]
-        branges.append((range_xmax - range_xmin, range_ymax - range_ymin, b.name))
+        range_xmin, range_xmax, range_ymin, range_ymax = bbox_block(b)
+        brange_x = range_xmax - range_xmin
+        brange_y = range_ymax - range_ymin
 
-    sblock_names = []
-    for rng in branges:
-        if not is_standard_frame_len(rng[0]):
+        # length should be standard & w/h should be \sqrt(2)
+        if not is_standard_frame_len(brange_x):
             continue
-        is_standard, standard_kind = is_standard_frame(hlinelen=rng[0], vlinelen=rng[1])
-        if is_standard:
-            print(rng, standard_kind)
-            sblock_names.append(rng[2])
+        is_standard, standard_kind = is_standard_frame(hlinelen=brange_x, vlinelen=brange_y)
 
-    terminal_blocks = []
+        # add to result
+        if is_standard:
+            print(brange_x, brange_y, b.name, standard_kind)
+            sblock_names.append(b.name)
+            # left right bottom top
+            sbcoords.append((range_xmin, range_xmax, range_ymin, range_ymax))
+
+    terminal_blocks = []  # final block of standard blocks
     for sbname in sblock_names:
         while True:
             found = False
             for b in dxf.blocks:
-                for insert in filter(lambda x: x.dxftype == 'INSERT', b):
-                    if insert.name == sbname:
+                for ins in filter(lambda x: x.dxftype == 'INSERT', b):
+                    if ins.name == sbname:
+                        print(ins.insert)
                         found = True
                         sbname = b.name
             if found is not True:
@@ -202,47 +182,8 @@ def split_drawing_byblock(full_path):
     for tb in terminal_blocks:
         for e in filter(lambda x: x.dxftype == 'INSERT', dxf.entities):
             if e.name == tb:
-                drawing_inserts.append(e)
+                drawing_inserts.append(e.insert)
 
     print(drawing_inserts)
-
-
-def is_standard_frame_len(length, rng=10000):
-    nrange = 10
-    if length < rng / nrange:
-        return False
-
-    gbstandard = [210, 297, 420, 594, 841, 1189]
-    scale = [1, 2, 5, 10, 20, 50] + [100 * x for x in range(1, 20)]
-    compare = [length / x for x in scale]
-    tol = 0.1
-    for s in gbstandard:
-        for c in compare:
-            if abs(s - c) < tol:
-                return True
-    return False
-
-
-def is_standard_frame(hlinelen, vlinelen) -> Tuple[bool, str]:
-    kind = 'h'  # default: horizontal frame
-    if hlinelen < vlinelen:  # possibly verticle frame
-        kind = 'v'
-        vlinelen, hlinelen = hlinelen, vlinelen
-    tol = 0.01 * vlinelen
-    if abs(vlinelen * math.sqrt(2) - hlinelen) < tol:
-        return True, kind
-    return False, kind
-
-
-def ishorizontal(start, end):
-    tol = 1
-    if abs(start[1] - end[1]) < tol:
-        return True
-    return False
-
-
-def isverticle(start, end):
-    tol = 1
-    if abs(start[0] - end[0]) < tol:
-        return True
-    return False
+    print(sbcoords)
+    print()
