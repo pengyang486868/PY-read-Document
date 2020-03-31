@@ -2,6 +2,7 @@ from txtapi import readtxt
 from wordapi import readword, transdoc
 from pptapi import readppt, transppt
 from pdfapi import readpdf
+from dwgapi import readdxf
 import utils
 import config
 import uuid
@@ -38,6 +39,7 @@ def transform(fpath, tdir, extname):
 def analysis(fpath, extname, imgdir):
     content = None
     images = []
+    drawings = []
 
     kw_arr = []
     freq_arr = []
@@ -65,6 +67,10 @@ def analysis(fpath, extname, imgdir):
 
     if extname == '.pdf':
         content = readpdf.readtext(fpath)
+
+    if extname == '.dxf':
+        content = readdxf.readtxt(fpath)
+        drawings = readdxf.split_drawing_byblock(fpath)
 
     # do analysis
     if content is not None:
@@ -95,7 +101,7 @@ def analysis(fpath, extname, imgdir):
 
     return (','.join(kw_arr), ','.join(freq_arr),
             ','.join(ph_arr), ','.join(nw_arr), ','.join(sum_arr),
-            images
+            images, drawings
             )
 
 

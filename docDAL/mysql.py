@@ -83,3 +83,8 @@ def clear_img_info():
 def write_img_info(data: pd.DataFrame):
     dw = get_dw_engine()
     data.to_sql('file_image', dw, if_exists='append', index=False, method="multi")
+
+
+def write_drawingsplit_info(data: pd.DataFrame):
+    dw = get_dw_engine()
+    data.to_sql('file_drawingsplit', dw, if_exists='append', index=False, method="multi")

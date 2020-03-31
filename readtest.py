@@ -13,6 +13,7 @@ if __name__ == '__main__':
     pdfpath = r'D:/filedata/test.pdf'
     pdftxtpath = r'D:/data/pdftxt.pdf'
     dxfpath = r'D:\filedata\uname/儿童医院电气-min.dxf'
+    # dxfpath = r'D:\filedata\uname\raw/第一层土分块22.dxf'
     wordpath = r'D:\filedata\uname\f/M-bimsys-04+杭州BIM系统.docx'
     resultdir = r'D:/result'
 

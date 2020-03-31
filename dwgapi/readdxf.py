@@ -1,6 +1,6 @@
 import dxfgrabber
-
 from .geohelper import *
+import fileenum
 
 
 def read_example(full_path):
@@ -138,7 +138,11 @@ def split_drawing(full_path):
     print()
 
 
-# frame block split
+def readtxt(full_path):
+    return ['']
+
+
+# Splitting drawing if frame is 'BLOCK'
 def split_drawing_byblock(full_path):
     dxf = dxfgrabber.readfile(full_path)
 
@@ -156,34 +160,42 @@ def split_drawing_byblock(full_path):
 
         # add to result
         if is_standard:
-            print(brange_x, brange_y, b.name, standard_kind)
+            print('检测到的标准图框的块', brange_x, brange_y, b.name, standard_kind)
             sblock_names.append(b.name)
             # left right bottom top
-            sbcoords.append((range_xmin, range_xmax, range_ymin, range_ymax))
+            sbcoords.append([range_xmin, range_xmax, range_ymin, range_ymax])
 
-    terminal_blocks = []  # final block of standard blocks
+    terminal_blocks = []  # final block of standard blocks, maybe itself
     for sbname in sblock_names:
+        deltax = 0
+        deltay = 0
         while True:
             found = False
             for b in dxf.blocks:
-                for ins in filter(lambda x: x.dxftype == 'INSERT', b):
+                for ins in filter(lambda x: x.dxftype == DxfType.INSERT, b):
                     if ins.name == sbname:
-                        print(ins.insert)
+                        # coor history record
+                        deltax += ins.insert[0]
+                        deltay += ins.insert[1]
                         found = True
                         sbname = b.name
             if found is not True:
-                terminal_blocks.append(sbname)
+                terminal_blocks.append([sbname, deltax, deltay])
                 break
 
-    print(terminal_blocks)
+    print('最初图块在最终图块的累积偏移', terminal_blocks)
 
-    # zuobiao bianhuan record
-    drawing_inserts = []
-    for tb in terminal_blocks:
-        for e in filter(lambda x: x.dxftype == 'INSERT', dxf.entities):
-            if e.name == tb:
-                drawing_inserts.append(e.insert)
+    split_result = []
+    for tb, sbc in zip(terminal_blocks, sbcoords):
+        for e in filter(lambda x: x.dxftype == DxfType.INSERT, dxf.entities):
+            if e.name == tb[0]:
+                # left right bottom top
+                offset = 2
+                split_result.append({'left': int(sbc[0] + tb[1] + e.insert[0] - offset),
+                                     'right': int(sbc[1] + tb[1] + e.insert[0] + offset),
+                                     'bottom': int(sbc[2] + tb[2] + e.insert[1] - offset),
+                                     'top': int(sbc[3] + tb[2] + e.insert[1] + offset)})
 
-    print(drawing_inserts)
-    print(sbcoords)
-    print()
+    print('最初图块的左右下上', sbcoords)
+    print('最终坐标系的左右下上', split_result)
+    return split_result

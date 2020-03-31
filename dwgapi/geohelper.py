@@ -1,5 +1,6 @@
 from typing import Tuple
 import math
+from fileenum import DxfType
 
 
 # national standard length
@@ -46,17 +47,17 @@ def isverticle(start, end):
 
 
 # bounding box for lines
-def bboxfor(e, dxftype='LINE'):
+def bboxfor(e, dxftype=DxfType.LINE):
     xmin = float('inf')
     xmax = float('-inf')
     ymin = float('inf')
     ymax = float('-inf')
-    if dxftype == 'LINE':
+    if dxftype == DxfType.LINE:
         xmax = max(e.start[0], e.end[0], xmax)
         xmin = min(e.start[0], e.end[0], xmin)
         ymax = max(e.start[1], e.end[1], ymax)
         ymin = max(e.start[1], e.end[1], ymin)
-    if dxftype == 'LWPOLYLINE':
+    if dxftype == DxfType.LWPOLYLINE:
         for p in e.points:
             xmax = max(p[0], xmax)
             xmin = min(p[0], xmin)
@@ -77,4 +78,4 @@ def bbox_block(b):
         range_xmax = max(cur_xmax, range_xmax)
         range_ymin = min(cur_ymin, range_ymin)
         range_ymax = max(cur_ymax, range_ymax)
-    return range_xmin , range_xmax, range_ymin , range_ymax
+    return range_xmin, range_xmax, range_ymin, range_ymax
