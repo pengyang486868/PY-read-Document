@@ -1,6 +1,6 @@
 import dxfgrabber
 from .geohelper import *
-import fileenum
+from model import DrawingSplit
 
 
 def read_example(full_path):
@@ -160,7 +160,7 @@ def split_drawing_byblock(full_path):
 
         # add to result
         if is_standard:
-            print('检测到的标准图框的块', brange_x, brange_y, b.name, standard_kind)
+            # print('检测到的标准图框的块', brange_x, brange_y, b.name, standard_kind)
             sblock_names.append(b.name)
             # left right bottom top
             sbcoords.append([range_xmin, range_xmax, range_ymin, range_ymax])
@@ -183,19 +183,18 @@ def split_drawing_byblock(full_path):
                 terminal_blocks.append([sbname, deltax, deltay])
                 break
 
-    print('最初图块在最终图块的累积偏移', terminal_blocks)
-
+    # print('最初图块在最终图块的累积偏移', terminal_blocks)
     split_result = []
     for tb, sbc in zip(terminal_blocks, sbcoords):
         for e in filter(lambda x: x.dxftype == DxfType.INSERT, dxf.entities):
             if e.name == tb[0]:
                 # left right bottom top
                 offset = 2
-                split_result.append({'left': int(sbc[0] + tb[1] + e.insert[0] - offset),
-                                     'right': int(sbc[1] + tb[1] + e.insert[0] + offset),
-                                     'bottom': int(sbc[2] + tb[2] + e.insert[1] - offset),
-                                     'top': int(sbc[3] + tb[2] + e.insert[1] + offset)})
+                split_result.append({'left': int((sbc[0] + tb[1]) * e.scale[0] + e.insert[0] - offset),
+                                     'right': int((sbc[1] + tb[1]) * e.scale[0] + e.insert[0] + offset),
+                                     'bottom': int((sbc[2] + tb[2]) * e.scale[1] + e.insert[1] - offset),
+                                     'top': int((sbc[3] + tb[2]) * e.scale[1] + e.insert[1] + offset)})
 
-    print('最初图块的左右下上', sbcoords)
-    print('最终坐标系的左右下上', split_result)
+    # print('最初图块的左右下上', sbcoords)
+    # print('最终坐标系的左右下上', split_result)
     return split_result

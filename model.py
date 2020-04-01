@@ -51,6 +51,12 @@ class ImageInfo:
         self.newwords = []
 
 
+class DrawingSplit:
+    def __init__(self):
+        self.name: str = ''
+        self.coord = [0.0] * 4  # left right bottom top
+
+
 class SearchResultBase:
     def __init__(self):
         self.fpath = ''

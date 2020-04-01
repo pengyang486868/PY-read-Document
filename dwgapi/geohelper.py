@@ -4,8 +4,8 @@ from fileenum import DxfType
 
 
 # national standard length
-def is_standard_frame_len(length, rng=10000):
-    nrange = 15
+def is_standard_frame_len(length, rng=10000) -> bool:
+    nrange = 30
     if length < rng / nrange:
         return False
 
@@ -32,14 +32,14 @@ def is_standard_frame(hlinelen, vlinelen) -> Tuple[bool, str]:
     return False, kind
 
 
-def ishorizontal(start, end):
+def ishorizontal(start, end) -> bool:
     tol = 1
     if abs(start[1] - end[1]) < tol:
         return True
     return False
 
 
-def isverticle(start, end):
+def isverticle(start, end) -> bool:
     tol = 1
     if abs(start[0] - end[0]) < tol:
         return True

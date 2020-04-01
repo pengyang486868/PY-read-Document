@@ -13,19 +13,21 @@ fname_arr = os.listdir(rawfiledir)
 transname_arr = os.listdir(filedir)
 transname_arr_noext = list(map(lambda x: os.path.splitext(x)[0], transname_arr))
 
-print('transform')
-for fullname in fname_arr:
-    print(fullname)
-    ext_tuple = os.path.splitext(fullname)
-    fname = ext_tuple[0]
-    extname = ext_tuple[1]
-    if fname not in transname_arr_noext:
-        fpath = os.path.join(rawfiledir, fullname)
-        transformed = core.transform(fpath, filedir, extname)
-        if not transformed:
-            shutil.copy(fpath, filedir)
+retransform = False
+if retransform:
+    print('transform')
+    for fullname in fname_arr:
+        print(fullname)
+        ext_tuple = os.path.splitext(fullname)
+        fname = ext_tuple[0]
+        extname = ext_tuple[1]
+        if fname not in transname_arr_noext:
+            fpath = os.path.join(rawfiledir, fullname)
+            transformed = core.transform(fpath, filedir, extname)
+            if not transformed:
+                shutil.copy(fpath, filedir)
 
-reanalysis = False
+reanalysis = True
 if reanalysis:
     print('analysis')
     result = []
@@ -49,16 +51,16 @@ if reanalysis:
         drawingresult += curdrawing
 
     resultdf = pd.DataFrame(result)
-    imgresultdf = pd.DataFrame(imgresult)[['fname', 'keywords', 'newwords', 'relatedtxt', 'docname']]
+    # imgresultdf = pd.DataFrame(imgresult)[['fname', 'keywords', 'newwords', 'relatedtxt', 'docname']]
     drawingresultdf = pd.DataFrame(drawingresult)
 
     cnt = conn.clear_file_info()
     conn.write_file_info(resultdf)
-    conn.write_img_info(imgresultdf)
+    # conn.write_img_info(imgresultdf)
     conn.write_drawingsplit_info(drawingresultdf)
     print('del', str(cnt), 'write', str(len(resultdf)))
 
-aiq = True
+aiq = False
 if aiq:
     # load from db
     fobjs = conn.get_file_info(returnobj=True)
