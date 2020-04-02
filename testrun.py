@@ -51,12 +51,12 @@ if reanalysis:
         drawingresult += curdrawing
 
     resultdf = pd.DataFrame(result)
-    # imgresultdf = pd.DataFrame(imgresult)[['fname', 'keywords', 'newwords', 'relatedtxt', 'docname']]
+    imgresultdf = pd.DataFrame(imgresult)[['fname', 'keywords', 'newwords', 'relatedtxt', 'docname']]
     drawingresultdf = pd.DataFrame(drawingresult)
 
     cnt = conn.clear_file_info()
     conn.write_file_info(resultdf)
-    # conn.write_img_info(imgresultdf)
+    conn.write_img_info(imgresultdf)
     conn.write_drawingsplit_info(drawingresultdf)
     print('del', str(cnt), 'write', str(len(resultdf)))
 

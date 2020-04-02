@@ -1,6 +1,8 @@
 import dxfgrabber
 from .geohelper import *
 from model import DrawingSplit
+from fileenum import DxfType
+import utils
 
 
 def read_example(full_path):
@@ -139,7 +141,34 @@ def split_drawing(full_path):
 
 
 def readtxt(full_path):
-    return ['']
+    dxf = dxfgrabber.readfile(full_path)
+    # for layer in dxf.layers:
+    #     print(layer.name, layer.color, layer.linetype)
+
+    contents = []
+    for e in dxf.entities:
+        curstr = ''
+        if e.dxftype == DxfType.MTEXT:  # print(l.insert)
+            curstr = e.raw_text
+        if e.dxftype == DxfType.TEXT:  # print(round(l.insert[0], 2))
+            curstr = e.text
+        curstr = utils.remove_cadliteral(curstr)
+        if len(curstr) > 1 and (not utils.is_pure_abc(curstr)):
+            contents.append(curstr)
+
+    blocktxts = []
+    for b in dxf.blocks:
+        for e in b:
+            curstr = ''
+            if e.dxftype == DxfType.MTEXT:
+                curstr = e.raw_text
+            if e.dxftype == DxfType.TEXT:
+                curstr = e.text
+            curstr = utils.remove_cadliteral(curstr)
+            if len(curstr) > 1 and (not utils.is_pure_abc(curstr)):
+                blocktxts.append(curstr)
+
+    return sorted(set(contents + blocktxts))
 
 
 # Splitting drawing if frame is 'BLOCK'

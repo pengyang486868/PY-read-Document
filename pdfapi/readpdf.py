@@ -13,6 +13,8 @@ def readtext(full_path):
     with pdfplumber.open(full_path) as pdf:
         for p in pdf.pages:
             text = p.extract_text()
+            if not text:
+                continue
             # table = page.extract_tables()
             textarr = text.split('\n')
             result = result + textarr

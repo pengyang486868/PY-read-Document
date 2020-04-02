@@ -4,6 +4,7 @@ import config
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
+import re
 
 
 def is_pure_abc(s):
@@ -13,6 +14,27 @@ def is_pure_abc(s):
         if (c > 122 or c < 48) and (ch not in charr):
             return False
     return True
+
+
+def remove_cadliteral(s):
+    # {\xxx;TEXT} -> TEXT
+    result = re.sub(r'{\\(?P<control>.+?);(?P<txt>.+?)}', r'\g<txt>', s)
+
+    # delete \H1.3333x;
+    result = re.sub(r'\\H.+?x', r'', result)
+
+    # delete \pi-7999.9,l7999.9;
+    result = re.sub(r'\\pi-.+?;', r'', result)
+
+    # \P and space
+    minlen = 8
+    temp = re.sub(r'\s+', r'', result)
+    if len(temp) <= minlen:
+        result = temp
+    else:
+        result = re.sub(r'\\P', r' ', result)
+        result = re.sub(r'\s+', r' ', result)
+    return result
 
 
 # string similarity
