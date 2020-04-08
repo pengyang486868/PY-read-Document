@@ -8,7 +8,7 @@ import re
 
 
 def is_pure_abc(s):
-    charr = [',', '.', '-', ' ']
+    charr = [',', '.', '-', ' ','\\','@','%']
     for ch in s:
         c = ord(ch)  # ascii
         if (c > 122 or c < 48) and (ch not in charr):
@@ -25,6 +25,9 @@ def remove_cadliteral(s):
 
     # delete \pi-7999.9,l7999.9;
     result = re.sub(r'\\pi-.+?;', r'', result)
+
+    # delete \\A1;
+    result = re.sub(r'\\\\A1;', r'', result)
 
     # \P and space
     minlen = 8

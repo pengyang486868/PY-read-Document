@@ -3,6 +3,7 @@ from .geohelper import *
 from model import DrawingSplit
 from fileenum import DxfType
 import utils
+import json
 
 
 def read_example(full_path):
@@ -59,7 +60,7 @@ def read_example(full_path):
 
 
 # all in dxf.modelspace()
-def split_drawing(full_path):
+def test_split_drawing(full_path):
     dxf = dxfgrabber.readfile(full_path)
 
     # guess overall range
@@ -147,28 +148,37 @@ def readtxt(full_path):
 
     contents = []
     for e in dxf.entities:
-        curstr = ''
-        if e.dxftype == DxfType.MTEXT:  # print(l.insert)
-            curstr = e.raw_text
-        if e.dxftype == DxfType.TEXT:  # print(round(l.insert[0], 2))
-            curstr = e.text
-        curstr = utils.remove_cadliteral(curstr)
-        if len(curstr) > 1 and (not utils.is_pure_abc(curstr)):
+        curstr = extract_txt(e)
+        if curstr:
             contents.append(curstr)
 
     blocktxts = []
     for b in dxf.blocks:
         for e in b:
-            curstr = ''
-            if e.dxftype == DxfType.MTEXT:
-                curstr = e.raw_text
-            if e.dxftype == DxfType.TEXT:
-                curstr = e.text
-            curstr = utils.remove_cadliteral(curstr)
-            if len(curstr) > 1 and (not utils.is_pure_abc(curstr)):
+            curstr = extract_txt(e)
+            if curstr:
                 blocktxts.append(curstr)
 
     return sorted(set(contents + blocktxts))
+
+
+def readinfo(full_path):
+    # load standard info words
+    with open(r'dwgapi\info_words.json', 'r', encoding='utf-8') as iwf:
+        info_words = json.load(iwf)
+
+    # get all text and coords
+    dxf = dxfgrabber.readfile(full_path)
+    alltxt = get_all_info_text(dxf, [x['text'] for x in info_words])
+
+    # analysis position
+    infopairs = []
+    for tfield in alltxt:
+        for tcontent in alltxt:
+            if is_info_neighbor(tfield, tcontent):
+                infopairs.append((tfield['text'], tcontent['text']))
+
+    return None
 
 
 # Splitting drawing if frame is 'BLOCK'
@@ -227,3 +237,84 @@ def split_drawing_byblock(full_path):
     # print('最初图块的左右下上', sbcoords)
     # print('最终坐标系的左右下上', split_result)
     return split_result
+
+
+# text position and full info
+def get_all_info_text(dxf, info_words):
+    sblock_names = []  # contain info block names
+    sblock_texts = []
+    for b in dxf.blocks:
+        btexts = []
+        for e in b:
+            curstr = extract_txt(e)
+            if not curstr:
+                continue
+            btexts.append({'block': b.name, 'text': curstr, 'height': e.height,
+                           'x': e.insert[0], 'y': e.insert[1]})
+        is_info_block = False
+        for bt in btexts:
+            if bt['text'] in info_words:
+                is_info_block = True
+        if is_info_block:
+            sblock_names.append(b.name)
+            sblock_texts += btexts
+
+    # block shift history result
+    shift_result = {}
+    for sbname in sblock_names:
+        origin = sbname
+        deltax = 0
+        deltay = 0
+        while True:
+            found = False
+            for b in dxf.blocks:
+                for ins in filter(lambda x: x.dxftype == DxfType.INSERT, b):
+                    if ins.name == sbname:
+                        # coor history record
+                        deltax += ins.insert[0]
+                        deltay += ins.insert[1]
+                        found = True
+                        sbname = b.name
+            if found is not True:
+                shift_result[origin] = (sbname, deltax, deltay)
+                break
+
+    # shift text in blocks
+    text_result = []
+    for sbtxt in sblock_texts:
+        shift = shift_result[sbtxt['block']]
+        for e in filter(lambda x: x.dxftype == DxfType.INSERT, dxf.entities):
+            if e.name == shift[0]:
+                offset = 2
+                text_result.append({'text': sbtxt['text'], 'height': sbtxt['height'] * e.scale[0],
+                                    'x': int((sbtxt['x'] + shift[1]) * e.scale[0] + e.insert[0] - offset),
+                                    'y': int((sbtxt['y'] + shift[2]) * e.scale[1] + e.insert[1] - offset)})
+
+    # add other drawing texts
+    for e in dxf.entities:
+        curstr = extract_txt(e)
+        if not curstr:
+            continue
+        text_result.append({'text': curstr, 'height': e.height,
+                            'x': e.insert[0], 'y': e.insert[1]})
+    return text_result
+
+
+def is_info_neighbor(tleft, tright):
+    return False
+
+
+def extract_txt(e):
+    curstr = ''
+    if e.dxftype == DxfType.MTEXT:
+        curstr = e.raw_text
+    if e.dxftype == DxfType.TEXT:
+        curstr = e.text
+    if not curstr:
+        return ''
+
+    # remove autocad literal
+    curstr = utils.remove_cadliteral(curstr)
+    if len(curstr) > 1 and (not utils.is_pure_abc(curstr)):
+        return curstr
+    return ''

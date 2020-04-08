@@ -367,6 +367,7 @@ def recommand(thisfile: FileInfo, fobjs: List[FileInfo], rnum=10):
     for fobj in fobjs:
         if fobj.id == thisfile.id and fobj.fname == thisfile.fname:
             continue
+        # !! use abs distance / cosine similarity
         d = np.linalg.norm(np.array(fobj.fingerprint) - np.array(thisfile.fingerprint))
         distarr.append({'file': fobj, 'dist': d})
     distarr.sort(key=lambda x: x['dist'])
