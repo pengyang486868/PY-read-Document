@@ -14,8 +14,8 @@ if __name__ == '__main__':
     pdfpath = r'D:/filedata/uname\f\M-bimsys-11+广联达BIM体系.pdf'
     pdftxtpath = r'D:/data/pdftxt.pdf'
 
-    dxfpath = r'D:\filedata\uname\dwg/D-commercial-01+来福士T2-min.dxf'
-    # dxfpath = r'D:\filedata\uname\儿童医院电气-min.dxf'
+    # dxfpath = r'D:\filedata\uname\dwg/D-commercial-01+来福士T2-min.dxf'
+    dxfpath = r'D:\filedata\uname\儿童医院电气-min.dxf'
 
     wordpath = r'D:\filedata\uname\f/M-bimsys-04+杭州BIM系统.docx'
 

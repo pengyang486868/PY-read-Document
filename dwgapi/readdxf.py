@@ -1,6 +1,5 @@
 import dxfgrabber
 from .geohelper import *
-from model import DrawingSplit
 from fileenum import DxfType
 import utils
 import json
@@ -169,14 +168,25 @@ def readinfo(full_path):
 
     # get all text and coords
     dxf = dxfgrabber.readfile(full_path)
-    alltxt = get_all_info_text(dxf, [x['text'] for x in info_words])
+    fieldtxt, contenttxt = get_all_info_text(dxf, [x['text'] for x in info_words])
 
     # analysis position
     infopairs = []
-    for tfield in alltxt:
-        for tcontent in alltxt:
-            if is_info_neighbor(tfield, tcontent):
-                infopairs.append((tfield['text'], tcontent['text']))
+    for tfield in fieldtxt:
+        infopair = None
+        charlen = tfield['height']  # characteristic length
+        tollen = 15 * charlen
+        mindist = float('inf')
+        # for tcontent in fieldtxt + contenttxt:
+        for tcontent in contenttxt:
+            curdist = info_neighbor_dist(tfield, tcontent, charlen)
+            if curdist < tollen and curdist < mindist:
+                # infopair = (tfield, tcontent)
+                infopair = ({'field': tfield['text'], 'content': tcontent['text'],
+                             'position': [tfield['x'], tfield['y']]})
+                mindist = curdist
+        if infopair:
+            infopairs.append(infopair)
 
     return None
 
@@ -251,17 +261,17 @@ def get_all_info_text(dxf, info_words):
                 continue
             btexts.append({'block': b.name, 'text': curstr, 'height': e.height,
                            'x': e.insert[0], 'y': e.insert[1]})
+        # decide whether info block
         is_info_block = False
         for bt in btexts:
             if bt['text'] in info_words:
                 is_info_block = True
-        if is_info_block:
-            sblock_names.append(b.name)
-            sblock_texts += btexts
+        sblock_names.append((b.name, is_info_block))
+        sblock_texts += btexts
 
     # block shift history result
     shift_result = {}
-    for sbname in sblock_names:
+    for sbname, sbisinfo in sblock_names:
         origin = sbname
         deltax = 0
         deltay = 0
@@ -276,32 +286,48 @@ def get_all_info_text(dxf, info_words):
                         found = True
                         sbname = b.name
             if found is not True:
-                shift_result[origin] = (sbname, deltax, deltay)
+                shift_result[origin] = (sbname, deltax, deltay, sbisinfo)
                 break
 
-    # shift text in blocks
-    text_result = []
+    # text in info blocks --> text result
+    # text in other blocks --> content result
+    field_result = []
+    content_result = []
     for sbtxt in sblock_texts:
         shift = shift_result[sbtxt['block']]
         for e in filter(lambda x: x.dxftype == DxfType.INSERT, dxf.entities):
             if e.name == shift[0]:
                 offset = 2
-                text_result.append({'text': sbtxt['text'], 'height': sbtxt['height'] * e.scale[0],
-                                    'x': int((sbtxt['x'] + shift[1]) * e.scale[0] + e.insert[0] - offset),
-                                    'y': int((sbtxt['y'] + shift[2]) * e.scale[1] + e.insert[1] - offset)})
+                final_info = {'text': sbtxt['text'], 'height': sbtxt['height'] * e.scale[0],
+                              'x': int((sbtxt['x'] + shift[1]) * e.scale[0] + e.insert[0] - offset),
+                              'y': int((sbtxt['y'] + shift[2]) * e.scale[1] + e.insert[1] - offset)}
+                if shift[3]:
+                    field_result.append(final_info)
+                else:
+                    content_result.append(final_info)
 
-    # add other drawing texts
+    # other drawing texts --> content result
     for e in dxf.entities:
         curstr = extract_txt(e)
         if not curstr:
             continue
-        text_result.append({'text': curstr, 'height': e.height,
-                            'x': e.insert[0], 'y': e.insert[1]})
-    return text_result
+        content_result.append({'text': curstr, 'height': e.height, 'x': e.insert[0], 'y': e.insert[1]})
+    return field_result, content_result
 
 
-def is_info_neighbor(tleft, tright):
-    return False
+def info_neighbor_dist(tleft, tright, charlen):
+    if tleft['x'] > tright['x']:
+        return float('inf')
+    if tleft['y'] - tright['y'] < -3 * charlen:
+        return float('inf')
+
+    xweight = 1.0
+    # yweight = 10
+    yweight = 1.2
+    dist = xweight * abs(tleft['x'] - tright['x']) + yweight * abs(tleft['y'] - tright['y'])
+    if dist < charlen / 10:  # self
+        return float('inf')
+    return dist
 
 
 def extract_txt(e):

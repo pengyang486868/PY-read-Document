@@ -8,6 +8,10 @@ def test1():
     print(ord('2'))
     print(utils.is_pure_abc('jgjw12'))
     print(utils.is_pure_abc('jgjw我12'))
+    x = [None]
+    a = [1, 2, 3]
+    a += x
+    print(a)
 
 
 def test_pytorch():
@@ -40,8 +44,6 @@ def test4():
 
 
 def test5():
-
-
     s = r'{\H1.3333x;\P一、设计依据\P}    1.工程概况  \P    本工程为{\C3;甲类}民防工程，位于地下{\C3;二、三}层，' \
         '平时为地下汽车库和医院配套用房；临战转换为{\C3;3}个甲类常6级核6级二等人员掩蔽部（防化级别为丙级）、' \
         '{\C3;1}个甲类核5级常5级急救医院（防化级别为乙级）和{\C3;1}座固定柴油电站，共设{\C3;4}个防护单元。      \P    ' \

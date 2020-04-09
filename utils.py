@@ -7,11 +7,14 @@ from mpl_toolkits.mplot3d import Axes3D
 import re
 
 
-def is_pure_abc(s):
-    charr = [',', '.', '-', ' ','\\','@','%']
+def is_pure_abc(s, number_as_abc=False):
+    lowbound = 65
+    if number_as_abc:
+        lowbound = 48
+    charr = [',', '.', '-', ' ', '\\', '@', '%']
     for ch in s:
         c = ord(ch)  # ascii
-        if (c > 122 or c < 48) and (ch not in charr):
+        if (c > 122 or c < lowbound) and (ch not in charr):
             return False
     return True
 
@@ -64,6 +67,16 @@ def plotxy(xall, yall, zall, clsarr):
 
     plt.legend()
     plt.show()
+
+
+def get_action(url: str, pdic):
+    for key, val in pdic:
+        url += key + '=' + val + '&'
+    url = url.strip('&')
+    req = request.Request(url, headers={})
+    f = request.urlopen(req)
+    cdata = str(f.read().decode())
+    return json.loads(cdata)
 
 
 def post_action(url, pdic):
@@ -120,4 +133,11 @@ def get_namedwords(t):
     url = config.nlpserver + '/keyw/namedwords'
     params = {'t': t}
     response = post_action(url, params)
+    return response['result']
+
+
+def is_company_str(s) -> bool:
+    url = config.nlpserver + '/keyw/iscompany?'
+    params = {'w': s + '是一个好单位'}
+    response = get_action(url, params)
     return response['result']
