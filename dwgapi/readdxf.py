@@ -140,7 +140,7 @@ def test_split_drawing(full_path):
     print()
 
 
-def readtxt(full_path):
+def readtxt(full_path,drop_duplicates=False):
     dxf = dxfgrabber.readfile(full_path)
     # for layer in dxf.layers:
     #     print(layer.name, layer.color, layer.linetype)
@@ -158,7 +158,9 @@ def readtxt(full_path):
             if curstr:
                 blocktxts.append(curstr)
 
-    return sorted(set(contents + blocktxts))
+    if drop_duplicates:
+        return sorted(set(contents + blocktxts))
+    return contents + blocktxts
 
 
 def readinfo(full_path):

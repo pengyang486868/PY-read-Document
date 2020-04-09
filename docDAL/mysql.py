@@ -32,7 +32,10 @@ def get_file_info(returnobj=False):
         curobj.extname = row['extname']
         curobj.username = row['username']
         curobj.keywords = row['keywords'].split(',')
-        curobj.kwfreq = list(map(int, row['kwfreq'].split(',')))
+        if row['kwfreq']:
+            curobj.kwfreq = list(map(int, row['kwfreq'].split(',')))
+        else:
+            curobj.kwfreq = []
         curobj.phrase = row['phrase'].split(',')
         curobj.newwords = row['newwords'].split(',')
         curobj.label = row['label']

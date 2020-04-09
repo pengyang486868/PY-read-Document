@@ -125,7 +125,8 @@ def file_cluster(fobjs: List[FileInfo]):
     pca = PCA(n_components=20)
     fprints = pca.fit_transform(all_wordvec)
     print('PCA ratio sum:', sum(pca.explained_variance_ratio_))
-    print()
+
+    ncluster = 6
     # fprints = all_wordvec
 
     # do cluster
@@ -146,11 +147,34 @@ def file_cluster(fobjs: List[FileInfo]):
     # labels = cluster_model.labels_
 
     # spectral
-    cluster_model = SpectralClustering(n_clusters=3, gamma=0.1).fit(fprints)
+    cluster_model = SpectralClustering(n_clusters=ncluster, gamma=0.1).fit(fprints)
     labels = cluster_model.labels_
 
     print(labels)
+    print('轮廓系数判断质量：')
+    print(metrics.silhouette_score(fprints, labels, metric='euclidean'))
 
+    for i in range(ncluster):
+        iclassfiles = [y[1] for y in filter(lambda x: x[0] == i, zip(labels, fobjs))]
+        wordstat = {}
+        for f in iclassfiles:
+            flen = sum(f.kwfreq)
+            for w, cnt in zip(f.keywords, f.kwfreq):
+                if w not in wordstat:
+                    wordstat[w] = 0
+                wordstat[w] += cnt / flen
+        sortedstat = sorted(wordstat.items(), key=lambda kv: kv[1], reverse=True)
+        print()
+        print('第', i, '类: ', len(iclassfiles), '个文件')
+
+        for ss in sortedstat[0:min(len(sortedstat), 5)]:
+            print(ss)
+        print('---------')
+        for f in iclassfiles:
+            print(f.fname)
+        print()
+
+    # plot 3-D subspace result
     utils.plotxy(fprints[:, 0], fprints[:, 1], fprints[:, 2], labels)
 
     return labels
@@ -169,20 +193,26 @@ def file_classify_demo(fobjs: List[FileInfo]):
     # make keyword score vec: train and test
     all_wordvec = []
     all_wordvec_test = []
-    labels = []
+    labels_train = []
+    labels_test = []
     for fobj in fobjs:
         fobj.set_wordvec(words)
+        if not fobj.kwfreq:
+            continue
         if not fobj.istest:
             all_wordvec.append(fobj.wordvec)
-            labels.append(fobj.label)
+            labels_train.append(fobj.label)
             # curlabel = [0] * 5
             # curlabel[fobj.label] = 1
             # labels.append(curlabel)
         else:
             all_wordvec_test.append(fobj.wordvec)
+            labels_test.append(fobj.label)
 
     # pca make fingerprints
-    pca = PCA(n_components=20)
+    inputdim = 20
+    outputdim = 7
+    pca = PCA(n_components=inputdim)
     pca.fit(all_wordvec)
     fprints = pca.transform(all_wordvec)
     fprints_test = pca.transform(all_wordvec_test)
@@ -191,18 +221,17 @@ def file_classify_demo(fobjs: List[FileInfo]):
 
     x_train = torch.from_numpy(fprints).float()
     x_test = torch.from_numpy(fprints_test).float()
-    y_train = torch.Tensor(labels).long()  # float()
+    y_train = torch.Tensor(labels_train).long()  # float()
 
     train_dataset = TensorDataset(x_train, y_train)
     dloader = DataLoader(train_dataset, batch_size=6, shuffle=True)
 
-    model = MLP()
-    optimizer = optim.Adam(model.parameters(), lr=0.05)
+    model = MLP(inputdim, outputdim)
+    optimizer = optim.Adam(model.parameters(), lr=0.01)
     lossfunc = nn.CrossEntropyLoss()
 
-    epoch = 50
+    epoch = 300 + 1
     for ecnt in range(epoch):
-        print('Epoch:', ecnt)
         for i, data in enumerate(dloader):
             optimizer.zero_grad()
             inputs, labels = data
@@ -225,13 +254,39 @@ def file_classify_demo(fobjs: List[FileInfo]):
             #     print(outputs)
             #     print(labels)
 
-        # y_train_step = model(x_train)
-        # y_train_step_label = np.argmax(y_train_step.data)
+        if ecnt % 20 == 0:
+            print('Epoch:', ecnt)
+            model.eval()
+            y_train_step = model(x_train)
+            y_train_step_label = np.argmax(y_train_step.data, axis=1)
+            y_test_step = model(x_test)
+            y_test_step_label = np.argmax(y_test_step.data, axis=1)
+            tran_accu = len(list(filter(lambda x: x == 0, y_train_step_label - np.array(labels_train)))) / len(
+                labels_train)
+            test_accu = len(list(filter(lambda x: x == 0, y_test_step_label - np.array(labels_test)))) / len(
+                labels_test)
 
-    y_train_look = model(x_train)
-    y_test = model(x_test)
+            print('tran_accu', tran_accu)
+            print('test_accu', test_accu)
+            print()
+            model.train()
+
+    # save model
+    save_path = r'.\ai\classify-demo.pth'
+    torch.save(model.state_dict(), save_path)
+
+    # load model
+    new_model = MLP(inputdim, outputdim)
+    new_model.load_state_dict(torch.load(save_path))
+
+    y_train_look = new_model(x_train)
+    y_test = new_model(x_test)
     print(y_train_look)
     print(y_test)
+    print(np.argmax(y_test.data, axis=1))
+    print(labels_test)
+    print(len(labels_test))
+    print(len(labels_train))
 
 
 # basic search by word

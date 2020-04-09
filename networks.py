@@ -3,9 +3,9 @@ import torch.nn.functional as F
 
 
 class MLP(nn.Module):
-    def __init__(self):
+    def __init__(self, inputdim, outputdim, hiddendim=0):
         super(MLP, self).__init__()
-        self.fc1 = nn.Linear(20, 5)
+        self.fc1 = nn.Linear(inputdim, outputdim)
         # self.fc2 = nn.Linear(5, 5)
 
     def forward(self, din):

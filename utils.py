@@ -56,7 +56,7 @@ def str_similar(s1: str, s2: str) -> float:
 
 # plot simple
 def plotxy(xall, yall, zall, clsarr):
-    marks = ['o', 'v', 'd', 's', '*', '+', 'h']
+    marks = ['o', 'v', 'd', 's', '*', '+', 'h', 'x', 'D', '4']
     allcls = list(set(clsarr))
     data = list(zip(xall, yall, zall, clsarr))
     fig = plt.figure()
