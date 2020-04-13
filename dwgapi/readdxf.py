@@ -177,10 +177,10 @@ def readinfo(full_path):
     for tfield in fieldtxt:
         infopair = None
         charlen = tfield['height']  # characteristic length
-        tollen = 15 * charlen
+        tollen = 15 * charlen  # if too far tol
         mindist = float('inf')
         # for tcontent in fieldtxt + contenttxt:
-        for tcontent in contenttxt:
+        for tcontent in contenttxt:  # no block itself
             curdist = info_neighbor_dist(tfield, tcontent, charlen)
             if curdist < tollen and curdist < mindist:
                 # infopair = (tfield, tcontent)

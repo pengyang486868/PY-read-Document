@@ -10,7 +10,9 @@ from .pdf2pic import transpic
 # can extract text fields
 def readtext(full_path):
     result = []
+    pagecount = 1
     with pdfplumber.open(full_path) as pdf:
+        pagecount = len(pdf.pages)
         for p in pdf.pages:
             text = p.extract_text()
             if not text:
@@ -18,6 +20,12 @@ def readtext(full_path):
             # table = page.extract_tables()
             textarr = text.split('\n')
             result = result + textarr
+
+    # if too few letters, should try ocr
+    lettercount = sum([len(x) for x in result])
+    letter_per_page_min = 10
+    if lettercount / pagecount < letter_per_page_min:
+        result = readbyocr(full_path)
 
     if len(result) < 10:
         return result
@@ -41,12 +49,6 @@ def readbyocr(full_path):
     pics.sort(key=lambda x: int(os.path.splitext(x)[0]))
     for p in pics:
         result += ocr.img_to_str(os.path.join(tempdir, p))
-        print(p)
-
-    # 还需猜测文档一般行字数 合并句尾分段
-    cntarr = list(map(len, result))
-    minlen, maxlen = pdflinelen(cntarr)
-    result = combine_normal_line(result, minlen, maxlen)
     return result
 
 
