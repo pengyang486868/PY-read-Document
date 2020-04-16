@@ -141,3 +141,10 @@ def is_company_str(s) -> bool:
     params = {'w': s + '是一个好单位'}
     response = get_action(url, params)
     return response['result']
+
+
+def is_company_many(arr):
+    url = config.nlpserver + '/keyw/iscompanymany'
+    params = {'t': [s + '是一个好单位' for s in arr]}
+    response = post_action(url, params)
+    return response['result']

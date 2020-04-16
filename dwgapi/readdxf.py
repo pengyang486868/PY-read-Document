@@ -140,7 +140,7 @@ def test_split_drawing(full_path):
     print()
 
 
-def readtxt(full_path,drop_duplicates=False):
+def readtxt(full_path, drop_duplicates=False):
     dxf = dxfgrabber.readfile(full_path)
     # for layer in dxf.layers:
     #     print(layer.name, layer.color, layer.linetype)
@@ -189,6 +189,13 @@ def readinfo(full_path):
                 mindist = curdist
         if infopair:
             infopairs.append(infopair)
+
+    iscompany_bool = utils.is_company_many([x['text'] for x in fieldtxt + contenttxt])
+    companyinfo = [s for s, q in zip(fieldtxt + contenttxt, iscompany_bool) if q]
+
+    for ci in companyinfo:
+        infopairs.append(({'field': 'COMPANY', 'content': ci['text'],
+                           'position': [ci['x'], ci['y']]}))
 
     return None
 

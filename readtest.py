@@ -26,8 +26,8 @@ if __name__ == '__main__':
 
     # pdftxt = readpdf.readtext(pdfpath)
     # print(pdftxt)
-    pdftxt = readpdf.readtext(pdfpath)
-    print(pdftxt)
+    # pdftxt = readpdf.readtext(pdfpath)
+    # print(pdftxt)
     # np.savetxt(os.path.join(r'D:', 'contract-result.txt'), np.array(pdftxt), delimiter='', fmt='%s')
 
     # curimg = readword.readimg(wordpath, imgdir, 'test')
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     # r = readdxf.split_drawing_byblock(dxfpath)
     # r = readdxf.readtxt(dxfpath)
     # np.savetxt(r'D:\dwgtxt.txt', r, encoding='utf-8',fmt='%s')
-    # r = readdxf.readinfo(dxfpath)
+    r = readdxf.readinfo(dxfpath)
 
     # transtest_origin = r'D:\data\newexp-word03test.doc'
     # transtest_target = r'D:\data'
