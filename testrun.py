@@ -68,5 +68,8 @@ if aiq:
     # print('cluster')
     # cluster_result = core.file_cluster(fobjs)
 
-    print('classify')
-    core.file_classify_demo(fobjs)
+    # print('classify')
+    # core.file_classify_demo(fobjs)
+
+    print('KG')
+    core.knowledge_graph_demo(fobjs)

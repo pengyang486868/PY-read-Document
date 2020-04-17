@@ -3,6 +3,7 @@ from wordapi import readword, transdoc
 from pptapi import readppt, transppt
 from pdfapi import readpdf
 from dwgapi import readdxf
+from knowledge import graph
 import utils
 import config
 import uuid
@@ -430,3 +431,9 @@ def recommand(thisfile: FileInfo, fobjs: List[FileInfo], rnum=10):
     if len(distarr) < rnum:
         return distarr
     return distarr[0:rnum]
+
+
+def knowledge_graph_demo(fobjs: List[FileInfo]):
+    r = graph.generate(fobjs)
+    # r = graph.chart_test()
+    return r

@@ -197,7 +197,7 @@ def readinfo(full_path):
         infopairs.append(({'field': 'COMPANY', 'content': ci['text'],
                            'position': [ci['x'], ci['y']]}))
 
-    return None
+    return infopairs
 
 
 # Splitting drawing if frame is 'BLOCK'
