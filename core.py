@@ -108,13 +108,7 @@ def analysis(fpath, extname, imgdir):
 
 # clustering
 def file_cluster(fobjs: List[FileInfo]):
-    words = {}
-    for fobj in fobjs:
-        for kw, freq in zip(fobj.keywords, fobj.kwfreq):
-            if kw in words:
-                words[kw] += freq
-            else:
-                words[kw] = freq
+    words = FileInfo.allwordsdic(fobjs)
 
     # make keyword score vec
     all_wordvec = []

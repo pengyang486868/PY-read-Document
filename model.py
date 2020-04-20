@@ -1,4 +1,5 @@
 import math
+from typing import List
 
 
 class FileInfoBase:
@@ -40,6 +41,19 @@ class FileInfo(FileInfoBase):
     @staticmethod
     def tfidf(freq, flen, allwords):
         return freq / flen * math.log(allwords / freq)
+
+    @staticmethod
+    def allwordsdic(fobjs, minlen=0) -> dict:
+        words = {}
+        for fobj in fobjs:
+            for kw, freq in zip(fobj.keywords, fobj.kwfreq):
+                if len(kw) < minlen:
+                    continue
+                if kw in words:
+                    words[kw] += freq
+                else:
+                    words[kw] = freq
+        return words
 
 
 class ImageInfo:
