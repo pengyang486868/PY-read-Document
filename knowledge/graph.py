@@ -46,7 +46,7 @@ def generate(fobjs: List[FileInfo]):
     nodes = []
     links = []
     tol = 0
-    maxlink = 100
+    maxlink = 200
     linkvalues = [linkmatrix[i][j] for i in range(nw) for j in range(nw) if linkmatrix[i][j] > 0]
     maxvalue = max(linkvalues)
     if len(linkvalues) > maxlink:

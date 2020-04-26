@@ -7,11 +7,11 @@
 
 </head>
 <body>
-    <div id="ee95eb3535e24a0594e0cd10bba0093f" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="c506bb8e48c54780b1083660f7063fdb" class="chart-container" style="width:1920px; height:1080px;"></div>
     <script>
-        var chart_ee95eb3535e24a0594e0cd10bba0093f = echarts.init(
-            document.getElementById('ee95eb3535e24a0594e0cd10bba0093f'), 'white', {renderer: 'canvas'});
-        var option_ee95eb3535e24a0594e0cd10bba0093f = {
+        var chart_c506bb8e48c54780b1083660f7063fdb = echarts.init(
+            document.getElementById('c506bb8e48c54780b1083660f7063fdb'), 'white', {renderer: 'canvas'});
+        var option_c506bb8e48c54780b1083660f7063fdb = {
     "animation": true,
     "animationThreshold": 2000,
     "animationDuration": 1000,
@@ -68,7 +68,7 @@
                 "show": true,
                 "width": 1,
                 "opacity": 1,
-                "curveness": 0.3,
+                "curveness": 0.1,
                 "type": "solid"
             },
             "roam": true,
@@ -83,7 +83,12 @@
                 {
                     "name": "\u5b89\u5168",
                     "symbolSize": 24.882532355936103,
-                    "value": 2577
+                    "value": 12577
+                },
+                {
+                    "name": "\u6750\u6599",
+                    "symbolSize": 7.8883695907193925,
+                    "value": 259
                 },
                 {
                     "name": "\u8fdb\u884c",
@@ -99,6 +104,11 @@
                     "name": "\u5de5\u4f5c",
                     "symbolSize": 11.390276011293771,
                     "value": 540
+                },
+                {
+                    "name": "\u7ec4\u7ec7",
+                    "symbolSize": 9.4411375064613,
+                    "value": 371
                 },
                 {
                     "name": "\u7ba1\u7406",
@@ -191,9 +201,29 @@
                     "value": 644
                 },
                 {
+                    "name": "\u8fdb\u5ea6",
+                    "symbolSize": 10.128643972614116,
+                    "value": 427
+                },
+                {
+                    "name": "\u4fdd\u8bc1",
+                    "symbolSize": 6.353192419892994,
+                    "value": 168
+                },
+                {
                     "name": "\u4eba\u5458",
                     "symbolSize": 10.816875941114754,
                     "value": 487
+                },
+                {
+                    "name": "\u63a7\u5236",
+                    "symbolSize": 6.774138189572569,
+                    "value": 191
+                },
+                {
+                    "name": "\u4f5c\u4e1a",
+                    "symbolSize": 11.220262351644118,
+                    "value": 524
                 },
                 {
                     "name": "\u6a21\u677f",
@@ -201,19 +231,9 @@
                     "value": 379
                 },
                 {
-                    "name": "\u8bbe\u5907",
-                    "symbolSize": 12.438852038782045,
-                    "value": 644
-                },
-                {
-                    "name": "\u5efa\u7b51",
-                    "symbolSize": 8.60226320187546,
-                    "value": 308
-                },
-                {
                     "name": "BIM",
                     "symbolSize": 14.737424168281814,
-                    "value": 904
+                    "value": 4904
                 },
                 {
                     "name": "\u4fe1\u606f",
@@ -226,9 +246,39 @@
                     "value": 470
                 },
                 {
+                    "name": "\u8bbe\u5907",
+                    "symbolSize": 12.438852038782045,
+                    "value": 644
+                },
+                {
+                    "name": "\u5efa\u7b51",
+                    "symbolSize": 8.60226320187546,
+                    "value": 308
+                },
+                {
                     "name": "\u7cfb\u7edf",
                     "symbolSize": 8.574288288110223,
                     "value": 306
+                },
+                {
+                    "name": "\u7a7a\u95f4",
+                    "symbolSize": 6.0,
+                    "value": 132
+                },
+                {
+                    "name": "\u5e94\u7528",
+                    "symbolSize": 6.141680137978944,
+                    "value": 157
+                },
+                {
+                    "name": "\u8fd0\u7ef4",
+                    "symbolSize": 6.0,
+                    "value": 148
+                },
+                {
+                    "name": "\u6570\u636e",
+                    "symbolSize": 6.0,
+                    "value": 91
                 }
             ],
             "edgeLabel": {
@@ -251,6 +301,13 @@
                 },
                 {
                     "source": "\u65bd\u5de5",
+                    "target": "\u6750\u6599",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u65bd\u5de5",
                     "target": "\u8fdb\u884c",
                     "lineStyle": {
                         "width": 20.0
@@ -268,6 +325,13 @@
                     "target": "\u5de5\u4f5c",
                     "lineStyle": {
                         "width": 3.136298787699388
+                    }
+                },
+                {
+                    "source": "\u65bd\u5de5",
+                    "target": "\u7ec4\u7ec7",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -398,6 +462,20 @@
                 },
                 {
                     "source": "\u65bd\u5de5",
+                    "target": "\u8fdb\u5ea6",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u65bd\u5de5",
+                    "target": "\u4fdd\u8bc1",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u65bd\u5de5",
                     "target": "\u4eba\u5458",
                     "lineStyle": {
                         "width": 2.0660314871101826
@@ -405,9 +483,44 @@
                 },
                 {
                     "source": "\u65bd\u5de5",
+                    "target": "\u63a7\u5236",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u65bd\u5de5",
+                    "target": "\u4f5c\u4e1a",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u65bd\u5de5",
                     "target": "\u6a21\u677f",
                     "lineStyle": {
                         "width": 1.131097122916044
+                    }
+                },
+                {
+                    "source": "\u65bd\u5de5",
+                    "target": "BIM",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u65bd\u5de5",
+                    "target": "\u4fe1\u606f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u65bd\u5de5",
+                    "target": "\u6a21\u578b",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -422,6 +535,13 @@
                     "target": "\u5de5\u7a0b",
                     "lineStyle": {
                         "width": 2.2914602839309666
+                    }
+                },
+                {
+                    "source": "\u5b89\u5168",
+                    "target": "\u5de5\u4f5c",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -454,6 +574,13 @@
                 },
                 {
                     "source": "\u5b89\u5168",
+                    "target": "\u73b0\u573a",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5b89\u5168",
                     "target": "\u5fc5\u987b",
                     "lineStyle": {
                         "width": 1.7413170612818951
@@ -475,9 +602,58 @@
                 },
                 {
                     "source": "\u5b89\u5168",
+                    "target": "\u68c0\u67e5",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5b89\u5168",
+                    "target": "\u9879\u76ee",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5b89\u5168",
+                    "target": "\u6280\u672f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5b89\u5168",
                     "target": "\u4eba\u5458",
                     "lineStyle": {
                         "width": 1.870092397382651
+                    }
+                },
+                {
+                    "source": "\u5b89\u5168",
+                    "target": "\u4f5c\u4e1a",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8fdb\u884c",
+                    "target": "\u6750\u6599",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5de5\u7a0b",
+                    "target": "\u6750\u6599",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
+                    "target": "\u6750\u6599",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -492,6 +668,13 @@
                     "target": "\u5de5\u4f5c",
                     "lineStyle": {
                         "width": 3.0301767047945942
+                    }
+                },
+                {
+                    "source": "\u8fdb\u884c",
+                    "target": "\u7ec4\u7ec7",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -622,9 +805,44 @@
                 },
                 {
                     "source": "\u8fdb\u884c",
+                    "target": "\u8fdb\u5ea6",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8fdb\u884c",
+                    "target": "\u4fdd\u8bc1",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8fdb\u884c",
                     "target": "\u4eba\u5458",
                     "lineStyle": {
                         "width": 2.3443580136778115
+                    }
+                },
+                {
+                    "source": "\u8fdb\u884c",
+                    "target": "\u63a7\u5236",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8fdb\u884c",
+                    "target": "\u4f5c\u4e1a",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8fdb\u884c",
+                    "target": "\u6a21\u677f",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -642,10 +860,45 @@
                     }
                 },
                 {
+                    "source": "\u8fdb\u884c",
+                    "target": "BIM",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8fdb\u884c",
+                    "target": "\u7cfb\u7edf",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8fdb\u884c",
+                    "target": "\u4fe1\u606f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8fdb\u884c",
+                    "target": "\u6a21\u578b",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
                     "source": "\u5de5\u7a0b",
                     "target": "\u5de5\u4f5c",
                     "lineStyle": {
                         "width": 2.1318888998902246
+                    }
+                },
+                {
+                    "source": "\u5de5\u7a0b",
+                    "target": "\u7ec4\u7ec7",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -692,9 +945,30 @@
                 },
                 {
                     "source": "\u5de5\u7a0b",
+                    "target": "\u4f7f\u7528",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5de5\u7a0b",
                     "target": "\u68c0\u67e5",
                     "lineStyle": {
                         "width": 1.385510039681706
+                    }
+                },
+                {
+                    "source": "\u5de5\u7a0b",
+                    "target": "\u91c7\u7528",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5de5\u7a0b",
+                    "target": "\u6df7\u51dd\u571f",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -712,6 +986,34 @@
                     }
                 },
                 {
+                    "source": "\u5de5\u7a0b",
+                    "target": "\u8fdb\u5ea6",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5de5\u7a0b",
+                    "target": "\u4eba\u5458",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5de5\u7a0b",
+                    "target": "\u63a7\u5236",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
+                    "target": "\u5de5\u4f5c",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
                     "source": "\u8981\u6c42",
                     "target": "\u5de5\u4f5c",
                     "lineStyle": {
@@ -719,10 +1021,73 @@
                     }
                 },
                 {
+                    "source": "\u5de5\u4f5c",
+                    "target": "\u8ba1\u5212",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8d28\u91cf",
+                    "target": "\u5de5\u4f5c",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5de5\u4f5c",
+                    "target": "\u73b0\u573a",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5fc5\u987b",
+                    "target": "\u5de5\u4f5c",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5de5\u4f5c",
+                    "target": "\u63aa\u65bd",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
                     "source": "\u9879\u76ee",
                     "target": "\u5de5\u4f5c",
                     "lineStyle": {
                         "width": 1.2927466633287814
+                    }
+                },
+                {
+                    "source": "\u6280\u672f",
+                    "target": "\u5de5\u4f5c",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8981\u6c42",
+                    "target": "\u7ec4\u7ec7",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8ba1\u5212",
+                    "target": "\u7ec4\u7ec7",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u6280\u672f",
+                    "target": "\u7ec4\u7ec7",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -734,6 +1099,13 @@
                 },
                 {
                     "source": "\u7ba1\u7406",
+                    "target": "\u751f\u4ea7",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
                     "target": "\u8d28\u91cf",
                     "lineStyle": {
                         "width": 1.4746620740478265
@@ -741,9 +1113,44 @@
                 },
                 {
                     "source": "\u7ba1\u7406",
+                    "target": "\u73b0\u573a",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
+                    "target": "\u5fc5\u987b",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
+                    "target": "\u63aa\u65bd",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
                     "target": "\u4f7f\u7528",
                     "lineStyle": {
                         "width": 1.2203103171444734
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
+                    "target": "\u68c0\u67e5",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
+                    "target": "\u5355\u4f4d",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -790,6 +1197,41 @@
                 },
                 {
                     "source": "\u7ba1\u7406",
+                    "target": "\u7a7a\u95f4",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
+                    "target": "\u7cfb\u7edf",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
+                    "target": "\u5e94\u7528",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
+                    "target": "\u8fd0\u7ef4",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
+                    "target": "\u6570\u636e",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7ba1\u7406",
                     "target": "\u4fe1\u606f",
                     "lineStyle": {
                         "width": 1.4308144698238108
@@ -800,6 +1242,13 @@
                     "target": "\u6a21\u578b",
                     "lineStyle": {
                         "width": 1.3157058888034143
+                    }
+                },
+                {
+                    "source": "\u8981\u6c42",
+                    "target": "\u8ba1\u5212",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -839,6 +1288,13 @@
                 },
                 {
                     "source": "\u8981\u6c42",
+                    "target": "\u5b89\u88c5",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8981\u6c42",
                     "target": "\u4f7f\u7528",
                     "lineStyle": {
                         "width": 1.2362693383664072
@@ -867,9 +1323,65 @@
                 },
                 {
                     "source": "\u8981\u6c42",
+                    "target": "\u8bbe\u8ba1",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8981\u6c42",
+                    "target": "\u9879\u76ee",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8981\u6c42",
                     "target": "\u6280\u672f",
                     "lineStyle": {
                         "width": 1.0018344931750176
+                    }
+                },
+                {
+                    "source": "\u9879\u76ee",
+                    "target": "\u8ba1\u5212",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8ba1\u5212",
+                    "target": "\u8fdb\u5ea6",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8d28\u91cf",
+                    "target": "\u5fc5\u987b",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8d28\u91cf",
+                    "target": "\u63aa\u65bd",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8d28\u91cf",
+                    "target": "\u68c0\u67e5",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5fc5\u987b",
+                    "target": "\u63aa\u65bd",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -877,6 +1389,48 @@
                     "target": "\u4f7f\u7528",
                     "lineStyle": {
                         "width": 1.5911889907208143
+                    }
+                },
+                {
+                    "source": "\u5fc5\u987b",
+                    "target": "\u68c0\u67e5",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u5fc5\u987b",
+                    "target": "\u91c7\u7528",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u4f7f\u7528",
+                    "target": "\u63aa\u65bd",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u63aa\u65bd",
+                    "target": "\u68c0\u67e5",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u91c7\u7528",
+                    "target": "\u63aa\u65bd",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u63aa\u65bd",
+                    "target": "\u4eba\u5458",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -894,6 +1448,20 @@
                     }
                 },
                 {
+                    "source": "\u94a2\u7b4b",
+                    "target": "\u6a21\u677f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u4f7f\u7528",
+                    "target": "\u68c0\u67e5",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
                     "source": "\u4f7f\u7528",
                     "target": "\u4eba\u5458",
                     "lineStyle": {
@@ -901,10 +1469,73 @@
                     }
                 },
                 {
+                    "source": "\u91c7\u7528",
+                    "target": "\u68c0\u67e5",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u9879\u76ee",
+                    "target": "\u68c0\u67e5",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
                     "source": "\u6df7\u51dd\u571f",
                     "target": "\u91c7\u7528",
                     "lineStyle": {
                         "width": 2.166221954750593
+                    }
+                },
+                {
+                    "source": "\u91c7\u7528",
+                    "target": "\u6a21\u677f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u6df7\u51dd\u571f",
+                    "target": "\u6a21\u677f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u9879\u76ee",
+                    "target": "\u8bbe\u8ba1",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "BIM",
+                    "target": "\u8bbe\u8ba1",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u9879\u76ee",
+                    "target": "\u6280\u672f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u9879\u76ee",
+                    "target": "\u4eba\u5458",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u9879\u76ee",
+                    "target": "\u5efa\u7b51",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -916,9 +1547,44 @@
                 },
                 {
                     "source": "\u9879\u76ee",
+                    "target": "\u4fe1\u606f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u9879\u76ee",
                     "target": "\u6a21\u578b",
                     "lineStyle": {
                         "width": 1.0461832467044494
+                    }
+                },
+                {
+                    "source": "\u6280\u672f",
+                    "target": "\u5efa\u7b51",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "BIM",
+                    "target": "\u6280\u672f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8bbe\u5907",
+                    "target": "\u5efa\u7b51",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "BIM",
+                    "target": "\u8bbe\u5907",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -929,10 +1595,59 @@
                     }
                 },
                 {
+                    "source": "\u8bbe\u5907",
+                    "target": "\u8fd0\u7ef4",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8bbe\u5907",
+                    "target": "\u4fe1\u606f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
                     "source": "BIM",
                     "target": "\u5efa\u7b51",
                     "lineStyle": {
                         "width": 1.1971570398810218
+                    }
+                },
+                {
+                    "source": "\u5efa\u7b51",
+                    "target": "\u4fe1\u606f",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u6a21\u578b",
+                    "target": "\u5efa\u7b51",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "BIM",
+                    "target": "\u7cfb\u7edf",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "BIM",
+                    "target": "\u5e94\u7528",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "BIM",
+                    "target": "\u8fd0\u7ef4",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -947,6 +1662,34 @@
                     "target": "\u6a21\u578b",
                     "lineStyle": {
                         "width": 1.6907969878667322
+                    }
+                },
+                {
+                    "source": "\u7cfb\u7edf",
+                    "target": "\u7a7a\u95f4",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u8fd0\u7ef4",
+                    "target": "\u7a7a\u95f4",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7cfb\u7edf",
+                    "target": "\u8fd0\u7ef4",
+                    "lineStyle": {
+                        "width": 1.0
+                    }
+                },
+                {
+                    "source": "\u7cfb\u7edf",
+                    "target": "\u4fe1\u606f",
+                    "lineStyle": {
+                        "width": 1.0
                     }
                 },
                 {
@@ -966,7 +1709,7 @@
         }
     ],
     "tooltip": {
-        "show": true,
+        "show": false,
         "trigger": "item",
         "triggerOn": "mousemove|click",
         "axisPointer": {
@@ -978,7 +1721,7 @@
         "borderWidth": 0
     }
 };
-        chart_ee95eb3535e24a0594e0cd10bba0093f.setOption(option_ee95eb3535e24a0594e0cd10bba0093f);
+        chart_c506bb8e48c54780b1083660f7063fdb.setOption(option_c506bb8e48c54780b1083660f7063fdb);
     </script>
 </body>
 </html>

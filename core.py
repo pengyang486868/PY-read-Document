@@ -121,7 +121,7 @@ def file_cluster(fobjs: List[FileInfo]):
     fprints = pca.fit_transform(all_wordvec)
     print('PCA ratio sum:', sum(pca.explained_variance_ratio_))
 
-    ncluster = 6
+    ncluster = 7
     # fprints = all_wordvec
 
     # do cluster
@@ -146,8 +146,9 @@ def file_cluster(fobjs: List[FileInfo]):
     labels = cluster_model.labels_
 
     print(labels)
-    print('轮廓系数判断质量：')
-    print(metrics.silhouette_score(fprints, labels, metric='euclidean'))
+    print('判断质量：')
+    print(metrics.calinski_harabasz_score(fprints, labels))
+    # print(metrics.silhouette_score(fprints, labels, metric='euclidean'))
 
     for i in range(ncluster):
         iclassfiles = [y[1] for y in filter(lambda x: x[0] == i, zip(labels, fobjs))]
