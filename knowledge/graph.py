@@ -52,23 +52,27 @@ def generate(fobjs: List[FileInfo]):
     if len(linkvalues) > maxlink:
         tol = sorted(linkvalues, reverse=True)[maxlink]
 
+    itemstyle = {"normal": {"color": "red"}, "emphasis": {"color": "green"}}
     for i in range(nw):
         for j in range(i + 1, nw):
             if linkmatrix[i][j] < tol:
                 continue
 
+            words_to_add = []
             if words_arr[i] not in [node['name'] for node in nodes]:
-                cnt = words[words_arr[i]]
-                cursize = 30 * max(0.2, math.sqrt(cnt / maxfreq))
-                nodes.append({'name': words_arr[i], 'symbolSize': cursize, 'value': cnt})
+                words_to_add.append(words_arr[i])
             if words_arr[j] not in [node['name'] for node in nodes]:
-                cnt = words[words_arr[j]]
+                words_to_add.append(words_arr[j])
+
+            for word_to_add in words_to_add:
+                cnt = words[word_to_add]
                 cursize = 30 * max(0.2, math.sqrt(cnt / maxfreq))
-                nodes.append({'name': words_arr[j], 'symbolSize': cursize, 'value': cnt})
+                nodes.append({'name': word_to_add, 'symbolSize': cursize, 'value': cnt,
+                              "itemStyle": itemstyle})
 
             start = words[words_arr[i]]
             end = words[words_arr[j]]
-            linestyle = {'width': 20.0 * max(0.05, linkmatrix[i][j] / maxvalue)}
+            linestyle = {'width': 20.0 * max(0.02, linkmatrix[i][j] / maxvalue)}
             if start > end:
                 links.append({"source": words_arr[i], "target": words_arr[j], 'lineStyle': linestyle})
             else:

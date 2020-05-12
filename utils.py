@@ -69,9 +69,10 @@ def plotxy(xall, yall, zall, clsarr):
     plt.show()
 
 
-def get_action(url: str, pdic):
-    for key, val in pdic:
-        url += key + '=' + val + '&'
+def get_action(url: str, pdic=None):
+    if pdic:
+        for key, val in pdic:
+            url += key + '=' + val + '&'
     url = url.strip('&')
     req = request.Request(url, headers={})
     f = request.urlopen(req)
@@ -148,3 +149,6 @@ def is_company_many(arr):
     params = {'t': [s + '是一个好单位' for s in arr]}
     response = post_action(url, params)
     return response['result']
+
+
+

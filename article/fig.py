@@ -4,7 +4,10 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import numpy as np
 
-plt.rc('font', family='Times New Roman')
+plt.rc('font', family='SimSun')
+
+
+# plt.rc('font', family='Times New Roman')
 
 
 def pca_fig():
@@ -61,5 +64,32 @@ def cluster_result():
     plt.show()
 
 
+def classify_result():
+    data = [[0.0000, 0.0000, 0.9742, 0.0000, 1.1414, 0.0000, 0.0000],
+            [2.0000, 4.2802, 0.0000, 0.0000, 0.9886, 1.2825, 0.0000],
+            [0.5000, 0.0000, 2.7037, 0.0000, 0.0000, 1.0075, 0.0000],
+            [0.0000, 1.3284, 0.0000, 1.7112, 0.0000, 8.6755, 0.0000],
+            [0.0000, 0.0000, 0.0000, 1.9267, 0.7577, 0.0000, 3.6312],
+            [0.0000, 0.0000, 0.0000, 2.6747, 1.1884, 0.0000, 3.4783]]
+
+    x = np.arange(7)
+    xlabels = ['混凝土', '安全', '施工', '设备', '管理', '应当', 'BIM']
+    fig, ax = plt.subplots(len(data))
+    for indx, line in enumerate(data):
+        curax = ax[indx]
+        curax.bar(x, line, width=0.9)
+        curax.set_yticks([])
+
+    ax[0].text(0.98, 0.65, '施工组织设计.ppt', transform=ax[0].transAxes, ha='right')
+    ax[1].text(0.98, 0.65, '课件-混凝土结构工程施工规范.pptx', transform=ax[1].transAxes, ha='right')
+    ax[2].text(0.98, 0.65, '施工设备安全管理规定.docx', transform=ax[2].transAxes, ha='right')
+    ax[3].text(0.02, 0.65, '设备管理(PM)设备日常管理.pptx', transform=ax[3].transAxes)
+    ax[4].text(0.02, 0.65, 'BIM9大技术集成应用.doc', transform=ax[4].transAxes)
+    ax[5].text(0.02, 0.65, 'BIM智慧管理系统.pdf', transform=ax[5].transAxes)
+
+    plt.xticks(x, xlabels)
+    plt.show()
+
+
 if __name__ == '__main__':
-    cluster_result()
+    classify_result()

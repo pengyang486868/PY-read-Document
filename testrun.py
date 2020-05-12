@@ -65,11 +65,11 @@ if aiq:
     # load from db
     fobjs = conn.get_file_info(returnobj=True)
 
-    print('cluster')
-    cluster_result = core.file_cluster(fobjs)
+    # print('cluster')
+    # cluster_result = core.file_cluster(fobjs)
 
     # print('classify')
     # core.file_classify_demo(fobjs)
 
-    # print('KG')
-    # core.knowledge_graph_demo(fobjs)
+    print('KG')
+    core.knowledge_graph_demo(fobjs)

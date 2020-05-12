@@ -1,6 +1,9 @@
-a = [{"field": "COMPANY", "content": "上海XXXXABCDXXXX设计院有限公司",
+
+a = [{"field": "COMPANY",
+      "content": "上海XXXXABCDXXXX设计院有限公司",
       "position": [86056, 45314]},
-     {"field": "建设单位", "content": "某某某大学附属某某医院",
+     {"field": "建设单位",
+      "content": "某某某大学附属某某医院",
       "position": [86570, 40695]}
      ]
 
@@ -44,6 +47,7 @@ d = [{"field": "阶段", "content": "施工图",
       "position": [85848, 12989]},
      {"field": "图纸名称", "content": "电站配电柜系统图",
       "position": [85848, 16189]},
-     {"field": "工程名称", "content": "某某大学附属某某医院扩建项目",
+     {"field": "工程名称",
+      "content": "某某大学附属某某医院扩建项目",
       "position": [85848, 20989]}
      ]
