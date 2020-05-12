@@ -56,8 +56,8 @@ def put_action(url, pdic):
     return True
 
 
-def get_documenttask():
-    url = config.backendserver + '/api/projects/0/entities/documenttask'
+def get_documenttask(projid=0):
+    url = config.backendserver + '/api/projects/{}/entities/documenttask'.format(projid)
     response = get_action(url)
     return response
 
@@ -67,30 +67,37 @@ def download_doc(docurl, path):
     return True
 
 
-def get_doctag():
-    url = config.backendserver + '/api/projects/0/document/filetags'
+def get_doctag(projid=0):
+    url = config.backendserver + '/api/projects/{}/document/filetags'.format(projid)
     response = get_action(url)
     return response
 
 
-def create_doctag(tag):
-    url = config.backendserver + '/api/projects/0/document/filetags'
+def create_doctag(tag, projid=0):
+    url = config.backendserver + '/api/projects/{}/document/filetags'.format(projid)
     url = url + '?tagName=' + parse.quote(tag)
     response = post_action(url, None)
     return response
 
 
-def delete_doctag(tagid):
-    url = config.backendserver + '/api/projects/0/document/filetags'
+def delete_doctag(tagid, projid=0):
+    url = config.backendserver + '/api/projects/{}/document/filetags'.format(projid)
     url = url + '?tagId=' + str(tagid)
     response = delete_action(url, None)
     return response
 
 
-def create_doctagrel(pairs):
-    url = config.backendserver + '/api/projects/0/document/files/tags'
+def create_doctagrel(pairs, projid=0):
+    url = config.backendserver + '/api/projects/{}/document/files/tags'.format(projid)
     params = []
     for pair in pairs:
         params.append({'fileId': pair[0], 'tagId': pair[1]})
     response = put_action(url, params)
     return True
+
+
+def delete_doctagrel(relid, projid=0):
+    url = config.backendserver + '/api/projects/{}/document/files/tags'.format(projid)
+    url = url + '?fileTagId=' + str(relid)
+    response = delete_action(url, None)
+    return response
