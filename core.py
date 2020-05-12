@@ -289,24 +289,22 @@ def file_classify_demo(fobjs: List[FileInfo]):
 def search_basic(inputword, fobjs: List[FileInfo], givetime=True):
     start = datetime.now()
     nfile = len(fobjs)
-    words = {}
-    for fobj in fobjs:
-        for kw, freq in zip(fobj.keywords, fobj.kwfreq):
-            if kw in words:
-                words[kw] += freq
-            else:
-                words[kw] = freq
+    words = FileInfo.allwordsdic(fobjs)
 
     # swords = utils.get_keywords(word, 10)
     swords = inputword.split(' ')
     result = []
     for fo in fobjs:
+        try:
+            flen_param = 1 / math.log(sum(fo.kwfreq), 2)
+            phlenparam = 1 / len(fo.phrase)
+            nwlenparam = 1 / len(fo.newwords)
+        except ValueError as e:
+            print(e)
+            continue
         currentresult = NormalSearchResult()
         currentresult.fpath = fo.fname
         currentresult.sword = inputword
-        flen_param = 1 / math.log(sum(fo.kwfreq), 2)
-        phlenparam = 1 / len(fo.phrase)
-        nwlenparam = 1 / len(fo.newwords)
 
         score_keyword = 0
         score_phrase = 0
@@ -330,20 +328,21 @@ def search_basic(inputword, fobjs: List[FileInfo], givetime=True):
         # make result
         currentresult.score = score_keyword + score_phrase + score_namedentity
         currentresult.scoredetail = (score_keyword, score_phrase, score_namedentity)
+        currentresult.obj = fo
         result.append(currentresult)
 
     result = list(filter(lambda x: x.score > 0, result))
     result.sort(key=lambda x: x.score, reverse=True)
     totaltime = (datetime.now() - start).total_seconds()
 
-    if not givetime:
-        return result
-    return result, totaltime
+    if givetime:
+        return result, totaltime
+    return result
 
 
 # natural language search
 def search_natural(sentence, fobjs: List[FileInfo]):
-    relwords = ['和', '或', '不', '的']  # 'and' is actually default
+    relwords = ['和', '或', '不', '的']  # 'or' is actually default
     pass
 
 
