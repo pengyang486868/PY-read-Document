@@ -37,7 +37,7 @@ def transform(fpath, tdir, extname):
 
 
 # analysis file to structure data
-def analysis(fpath, extname, imgdir):
+def analysis(fpath, extname, imgdir=None, do_drawings=False):
     content = None
     images = []
     drawings = []
@@ -69,9 +69,11 @@ def analysis(fpath, extname, imgdir):
     if extname == '.pdf':
         content = readpdf.readtext(fpath)
 
-    if extname == '.dxf':
-        content = readdxf.readtxt(fpath)
-        drawings = readdxf.split_drawing_byblock(fpath)
+    drawings = None
+    if do_drawings:
+        if extname == '.dxf':
+            content = readdxf.readtxt(fpath)
+            drawings = readdxf.split_drawing_byblock(fpath)
 
     # do analysis
     if content is not None:
@@ -90,15 +92,16 @@ def analysis(fpath, extname, imgdir):
     # give keywords to images
     # ['fname', 'keywords', 'relatedtxt']
     makeparam = {}
-    for cimg in images:
-        # cimg['keywords'] = ','.join(utils.get_keywords([cimg['relatedtxt']], config.kw_topk_image))
-        makeparam[cimg['fname']] = cimg['relatedtxt']
+    if images:
+        for cimg in images:
+            # cimg['keywords'] = ','.join(utils.get_keywords([cimg['relatedtxt']], config.kw_topk_image))
+            makeparam[cimg['fname']] = cimg['relatedtxt']
 
-    kwdic = utils.get_keywordsmany(makeparam, config.kw_topk_image)
-    for cimg in images:
-        cimg['keywords'] = ','.join(kwdic[cimg['fname']][0])
-        cimg['newwords'] = ','.join(kwdic[cimg['fname']][1])
-        cimg['docname'] = fpath
+        kwdic = utils.get_keywordsmany(makeparam, config.kw_topk_image)
+        for cimg in images:
+            cimg['keywords'] = ','.join(kwdic[cimg['fname']][0])
+            cimg['newwords'] = ','.join(kwdic[cimg['fname']][1])
+            cimg['docname'] = fpath
 
     return (','.join(kw_arr), ','.join(freq_arr),
             ','.join(ph_arr), ','.join(nw_arr), ','.join(sum_arr),

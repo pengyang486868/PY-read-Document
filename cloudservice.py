@@ -101,3 +101,18 @@ def delete_doctagrel(relid, projid=0):
     url = url + '?fileTagId=' + str(relid)
     response = delete_action(url, None)
     return response
+
+
+def change_step(taskid, data: dict, projid=0):
+    url = config.backendserver + '/api/projects/{}/entities/documenttask/{}'.format(projid, taskid)
+    params = data
+    response = put_action(url, params)
+    return True
+
+
+def get_docs(projid=0):
+    pass
+
+
+def fill_docinfo(projid=0):
+    pass

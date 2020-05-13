@@ -23,6 +23,8 @@ def readtxt(full_path):
 
 
 def readimg(full_path, savedir, save_prefix=''):
+    if not savedir:
+        return
     doc = Document(full_path)
     doc_part = doc.part
     imgcount = 0

@@ -18,6 +18,8 @@ def readtxt(path):
 
 
 def readimg(path, savedir, save_prefix=''):
+    if not savedir:
+        return
     ppt = Presentation(path)
     imgnum = 0
     imginfo = []
