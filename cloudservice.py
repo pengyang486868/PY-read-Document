@@ -1,8 +1,6 @@
 import json
 from urllib import request, parse
 import config
-import numpy as np
-import re
 
 
 # general GET
@@ -110,9 +108,14 @@ def change_step(taskid, data: dict, projid=0):
     return True
 
 
-def get_docs(projid=0):
-    pass
+def get_docs_byid(fid, projid=0):
+    url = config.backendserver + '/api/projects/{}/document/files/{}'.format(projid, fid)
+    response = get_action(url)
+    return response
 
 
-def fill_docinfo(projid=0):
-    pass
+def fill_docinfo(docid, data: dict, projid=0):
+    url = config.backendserver + '/api/projects/{}/document/files?id={}'.format(projid, docid)
+    params = data
+    response = put_action(url, params)
+    return True

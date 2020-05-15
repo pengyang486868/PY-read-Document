@@ -3,9 +3,11 @@ from cloudservice import get_documenttask, download_doc
 from cloudservice import get_doctag, create_doctag, delete_doctag
 from cloudservice import create_doctagrel, delete_doctagrel
 from cloudservice import change_step
+from cloudservice import get_docs_byid, fill_docinfo
 import time, os
 import config
 import core
+import utils
 
 
 def test():
@@ -30,12 +32,31 @@ def test():
 
 
 def servicetest():
-    docresponse = get_documenttask(projid=4)
-    docdata = pd.DataFrame(docresponse)
-    # data1 = docresponse[66]
-    for indx, dt in docdata.iterrows():
-        dt['step'] = 1
-        change_step(dt['id'], dt.to_dict(), projid=4)
+    # docresponse = get_documenttask(projid=4)
+    # docdata = pd.DataFrame(docresponse)
+    # # data1 = docresponse[66]
+    # for indx, dt in docdata.iterrows():
+    #     dt['step'] = 1
+    #     change_step(dt['id'], dt.to_dict(), projid=4)
+    doc1 = get_docs_byid(153, projid=4)
+    # doc1 = docs_response[10]
+    doc1['abstract'] = 'new abstract'
+    updated = {
+        "name": doc1['name'],
+        "remark": doc1['remark'],
+        "keyWord": doc1['keyWord'],
+        "abstract": doc1['abstract'],
+        "url": doc1['url'],
+        "fileSize": doc1['fileSize'],
+        "fileType": doc1['fileType'],
+        "directoryId": doc1['directoryId'],
+        "creatorId": 1,
+        "uploaderId": 1,
+        "newWords": "string",
+        "wordFrequency": "string",
+        "phrases": "string"
+    }
+    fill_docinfo(doc1['id'], updated, projid=4)
 
 
 def reset_steps():
@@ -58,6 +79,9 @@ def on_loop(project_id):
 
     basepath = os.path.join(config.root_dir, str(project_id))
     for indx, dt in docdata.iterrows():
+        if not dt['fileUrl'].startswith('http'):
+            continue
+
         # 下载文件到本地文件夹
         curpath = os.path.join(basepath, dt['name'])
         download_doc(dt['fileUrl'], curpath)
@@ -69,9 +93,28 @@ def on_loop(project_id):
         transformed = core.transform(curpath, basepath, extname)
 
         # 分析成字段
-        kwords, kwfreq, pharr, nwarr, sumarr, curimg, curdrawing = core.analysis(curpath, extname, imgdir=None)
+        kwords, kwfreq, pharr, nwarr, sumarr, *_ = core.analysis(curpath, extname, imgdir=None)
 
         # 文件表写入字段
+        doc_record = get_docs_byid(dt['fileId'], projid=project_id)
+        # doc_record['abstract'] = sumarr
+        updated = {
+            "name": doc_record['name'],
+            "remark": doc_record['remark'],
+            "keyWord": kwords,
+            "abstract": sumarr,
+            "url": doc_record['url'],
+            "fileSize": doc_record['fileSize'],
+            "fileType": doc_record['fileType'],
+            "directoryId": doc_record['directoryId'],
+            "creatorId": 1,
+            "uploaderId": 1,
+            # "newWords": nwarr,
+            "newWords": utils.remove_blank(nwarr),
+            "wordFrequency": kwfreq,
+            "phrases": pharr
+        }
+        fill_docinfo(doc_record['id'], updated, projid=project_id)
 
         # 创建新标签并关联
         alltags = get_doctag()
@@ -100,6 +143,7 @@ def on_loop(project_id):
 
 
 if __name__ == '__main__':
+    # servicetest()
     for _ in range(1):
         on_loop(project_id=4)
         time.sleep(5)

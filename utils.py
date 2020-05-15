@@ -43,6 +43,12 @@ def remove_cadliteral(s):
     return result
 
 
+# \n ' '
+def remove_blank(s: str) -> str:
+    result = re.sub(r'\s+', r'', s)
+    return result
+
+
 # string similarity
 def str_similar(s1: str, s2: str) -> float:
     if len(s1) < 1 or len(s2) < 1:
@@ -138,17 +144,16 @@ def get_namedwords(t):
 
 
 def is_company_str(s) -> bool:
+    magicstr = '是一个好单位'
     url = config.nlpserver + '/keyw/iscompany?'
-    params = {'w': s + '是一个好单位'}
+    params = {'w': s + magicstr}
     response = get_action(url, params)
     return response['result']
 
 
 def is_company_many(arr):
+    magicstr = '是一个好单位'
     url = config.nlpserver + '/keyw/iscompanymany'
-    params = {'t': [s + '是一个好单位' for s in arr]}
+    params = {'t': [s + magicstr for s in arr]}
     response = post_action(url, params)
     return response['result']
-
-
-

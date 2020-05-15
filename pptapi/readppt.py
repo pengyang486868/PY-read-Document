@@ -2,6 +2,21 @@ import os
 from pptx import Presentation
 
 
+def readnotes(path):
+    content = []
+    ppt = Presentation(path)
+
+    for indx, slide in enumerate(ppt.slides):
+        try:
+            nt = slide.notes_slide.notes_text_frame.text
+            content.append((indx, nt))
+        except:
+            content.append((indx, ''))
+
+    # content = '\n'.join(content)
+    return content
+
+
 def readtxt(path):
     content = []
     ppt = Presentation(path)

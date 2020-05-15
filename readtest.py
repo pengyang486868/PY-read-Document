@@ -1,4 +1,4 @@
-from pptapi.readppt import readpptx, readimg
+from pptapi.readppt import readpptx, readimg,readnotes
 from pdfapi.pdf2pic import transpic
 from pdfapi import readpdf
 from dwgapi import readdxf
@@ -9,7 +9,7 @@ import os
 import config
 
 if __name__ == '__main__':
-    pptxpath = r'D:\xxb.pptx'
+    pptxpath = r'D:\qqsave\854525261\FileRecv\医院建筑bim运维与智能决策系统研究与应用-中施企协科技进步奖申报.pptx'
     # pptxpath = r'D:\filedata\uname\f/C-technical-05+第二节-混凝土灌注桩施工.pptx'
     pdfpath = r'E:\contract.pdf'
     # pdfpath = r'D:/filedata/uname\f\M-bimsys-11+广联达BIM体系.pdf'
@@ -25,7 +25,8 @@ if __name__ == '__main__':
     username = config.test_username
     imgdir = os.path.join(config.root_dir, username, 'image-test')
 
-    r = readimg(pptxpath, resultdir, save_prefix='XXB-')
+    # r = readimg(pptxpath, resultdir, save_prefix='XXB-')
+    r = readnotes(pptxpath)
 
     # pdftxt = readpdf.readtext(pdfpath)
     # print(pdftxt)
