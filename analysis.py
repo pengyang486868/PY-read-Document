@@ -10,6 +10,10 @@ import core
 import utils
 
 
+def analysis_log(info, info_obj):
+    print(info, info_obj)
+
+
 def test():
     docresponse = get_documenttask(projid=4)
     docdata = pd.DataFrame(docresponse)
@@ -79,12 +83,18 @@ def on_loop(project_id):
 
     basepath = os.path.join(config.root_dir, str(project_id))
     for indx, dt in docdata.iterrows():
+        info_log_obj = {'name': dt['name']}
         if not dt['fileUrl'].startswith('http'):
+            analysis_log('无文件', info_log_obj)
             continue
 
-        # 下载文件到本地文件夹
-        curpath = os.path.join(basepath, dt['name'])
-        download_doc(dt['fileUrl'], curpath)
+        try:
+            # 下载文件到本地文件夹
+            curpath = os.path.join(basepath, dt['name'])
+            download_doc(dt['fileUrl'], curpath)
+        except:
+            analysis_log('下载文件', info_log_obj)
+            continue
 
         # 转换文件
         ext_tuple = os.path.splitext(dt['name'])
@@ -93,7 +103,7 @@ def on_loop(project_id):
         transformed = core.transform(curpath, basepath, extname)
 
         # 分析成字段
-        kwords, kwfreq, pharr, nwarr, sumarr, *_ = core.analysis(curpath, extname, imgdir=None)
+        kwords, kwfreq, pharr, nwarr, sumarr, *img_none = core.analysis(curpath, extname, imgdir=None)
 
         # 文件表写入字段
         doc_record = get_docs_byid(dt['fileId'], projid=project_id)
@@ -109,7 +119,6 @@ def on_loop(project_id):
             "directoryId": doc_record['directoryId'],
             "creatorId": 1,
             "uploaderId": 1,
-            # "newWords": nwarr,
             "newWords": utils.remove_blank(nwarr),
             "wordFrequency": kwfreq,
             "phrases": pharr
@@ -137,6 +146,9 @@ def on_loop(project_id):
         # 更改task的阶段为已完成
         dt['step'] = 2
         change_step(dt['id'], dt.to_dict(), projid=4)
+
+        # 删除本地下载文件
+        pass
 
     # delete_doctagrel(13, projid=project_id)
     print()
