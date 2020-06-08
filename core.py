@@ -40,7 +40,7 @@ def transform(fpath, tdir, extname):
 def analysis(fpath, extname, imgdir=None, do_drawings=False):
     content = None
     images = []
-    drawings = []
+    # drawings = []
 
     kw_arr = []
     freq_arr = []
@@ -70,10 +70,12 @@ def analysis(fpath, extname, imgdir=None, do_drawings=False):
         content = readpdf.readtext(fpath)
 
     drawings = None
+    do_split_drawing = False
     if do_drawings:
         if extname == '.dxf':
             content = readdxf.readtxt(fpath)
-            drawings = readdxf.split_drawing_byblock(fpath)
+            if do_split_drawing:
+                drawings = readdxf.split_drawing_byblock(fpath)
 
     # do analysis
     if content is not None:

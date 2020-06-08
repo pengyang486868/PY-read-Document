@@ -21,3 +21,5 @@ token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEiLCJOYW1lIjoicm9
         '6LaF57qn566h55CG5ZGYIiwiQ29tcGFueSI6Iua1i-ivleWFrOWPuCIsIkNvbXBhbnlJZCI6IjEiLCJuYmYiOjE1ODkyND' \
         'Y5OTYsImV4cCI6MTY4OTg1MTc5NiwiaWF0IjoxNTg5MjQ2OTk2LCJpc3MiOiJTQ0M0In0.grzJjGbVp7YtC5yVajMJV' \
         'GNICfkP0wLNbuM6hurm7ys'
+
+analyzing_projects = [9]

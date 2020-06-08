@@ -74,6 +74,10 @@ def reset_steps():
 def on_loop(project_id):
     docresponse = get_documenttask(projid=project_id)
     docdata = pd.DataFrame(docresponse)
+
+    if len(docdata) == 0:
+        return
+
     docdata = docdata[docdata['step'] == 1]
 
     docdata = (docdata.sort_values('name')
@@ -97,58 +101,78 @@ def on_loop(project_id):
             continue
 
         # 转换文件
-        ext_tuple = os.path.splitext(dt['name'])
-        fname = ext_tuple[0]
-        extname = ext_tuple[1]
-        transformed = core.transform(curpath, basepath, extname)
+        try:
+            ext_tuple = os.path.splitext(dt['name'])
+            fname = ext_tuple[0]
+            extname = ext_tuple[1]
+            transformed = core.transform(curpath, basepath, extname)
+        except:
+            analysis_log('转换文件', info_log_obj)
+            continue
 
         # 分析成字段
-        kwords, kwfreq, pharr, nwarr, sumarr, *img_none = core.analysis(curpath, extname, imgdir=None)
+        try:
+            kwords, kwfreq, pharr, nwarr, sumarr, *img_none = core.analysis(curpath, extname, imgdir=None)
+        except:
+            analysis_log('分析成字段', info_log_obj)
+            continue
 
         # 文件表写入字段
-        doc_record = get_docs_byid(dt['fileId'], projid=project_id)
-        # doc_record['abstract'] = sumarr
-        updated = {
-            "name": doc_record['name'],
-            "remark": doc_record['remark'],
-            "keyWord": kwords,
-            "abstract": sumarr,
-            "url": doc_record['url'],
-            "fileSize": doc_record['fileSize'],
-            "fileType": doc_record['fileType'],
-            "directoryId": doc_record['directoryId'],
-            "creatorId": 1,
-            "uploaderId": 1,
-            "newWords": utils.remove_blank(nwarr),
-            "wordFrequency": kwfreq,
-            "phrases": pharr
-        }
-        fill_docinfo(doc_record['id'], updated, projid=project_id)
+        file_table_write_success = False
+        try:
+            doc_record = get_docs_byid(dt['fileId'], projid=project_id)
+            # doc_record['abstract'] = sumarr
+            updated = {
+                "name": doc_record['name'],
+                "remark": doc_record['remark'],
+                "keyWord": kwords,
+                "abstract": sumarr,
+                "url": doc_record['url'],
+                "fileSize": doc_record['fileSize'],
+                "fileType": doc_record['fileType'],
+                "directoryId": doc_record['directoryId'],
+                "creatorId": 1,
+                "uploaderId": 1,
+                "newWords": utils.remove_blank(nwarr),
+                "wordFrequency": kwfreq,
+                "phrases": pharr
+            }
+            fill_docinfo(doc_record['id'], updated, projid=project_id)
+            file_table_write_success = True
+        except:
+            analysis_log('文件表填入', dt['fileId'])
+            continue
 
         # 创建新标签并关联
-        alltags = get_doctag()
-        curtags = kwords.split(',')[:5]
-        dtrels = []
-        for curtag in curtags:
-            existq = False
-            for t in alltags:
-                if t['name'] == curtag:
-                    dtrels.append((dt['id'], t['id']))
-                    existq = True
-                    break
-            if not existq:
-                tagid = create_doctag(curtag, projid=project_id)
-                dtrels.append((dt['id'], tagid))
+        try:
+            alltags = get_doctag()
+            curtags = kwords.split(',')[:5]
+            dtrels = []
+            for curtag in curtags:
+                existq = False
+                for t in alltags:
+                    if str(t['name']).upper() == str(curtag).upper():
+                        dtrels.append((dt['fileId'], t['id']))
+                        existq = True
+                        break
+                if not existq:
+                    tagid = create_doctag(curtag, projid=project_id)
+                    dtrels.append((dt['fileId'], tagid))
 
-        # 写入关联文件和标签
-        create_doctagrel(dtrels, projid=project_id)
+            # 写入关联文件和标签
+            create_doctagrel(dtrels, projid=project_id)
+        except:
+            analysis_log('标签', dt['fileId'])
+            continue
 
         # 更改task的阶段为已完成
-        dt['step'] = 2
-        change_step(dt['id'], dt.to_dict(), projid=4)
+        if file_table_write_success:
+            dt['step'] = 2
+            change_step(dt['id'], dt.to_dict(), projid=0)
 
         # 删除本地下载文件
         pass
+        analysis_log('完成', info_log_obj)
 
     # delete_doctagrel(13, projid=project_id)
     print()
@@ -156,6 +180,12 @@ def on_loop(project_id):
 
 if __name__ == '__main__':
     # servicetest()
-    for _ in range(1):
-        on_loop(project_id=4)
-        time.sleep(5)
+    projects = config.analyzing_projects
+    # for loop_id in range(1000):
+    loop_id = 1
+    while True:
+        for pid in projects:
+            on_loop(project_id=pid)
+            time.sleep(5)
+            loop_id += 1
+            print(loop_id)
