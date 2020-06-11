@@ -21,6 +21,8 @@ from networks import MLP
 from model import NormalSearchResult, NaturalSearchResult
 import math
 from datetime import datetime
+import time
+import os
 
 
 # transform file format
@@ -37,7 +39,7 @@ def transform(fpath, tdir, extname):
 
 
 # analysis file to structure data
-def analysis(fpath, extname, imgdir=None, do_drawings=False):
+def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
     content = None
     images = []
     # drawings = []
@@ -77,6 +79,18 @@ def analysis(fpath, extname, imgdir=None, do_drawings=False):
             if do_split_drawing:
                 drawings = readdxf.split_drawing_byblock(fpath)
 
+        if extname == '.dwg':
+            maxtry = 100
+            transpath = fpath.replace('.dwg', '.dxf')
+            for ii in range(maxtry):
+                print(ii)
+                time.sleep(2)
+                if os.path.isfile(transpath):
+                    content = readdxf.readtxt(transpath)
+                    if do_split_drawing:
+                        drawings = readdxf.split_drawing_byblock(fpath)
+                    break
+
     # do analysis
     if content is not None:
         # key words
@@ -87,9 +101,10 @@ def analysis(fpath, extname, imgdir=None, do_drawings=False):
         # key phrases
         ph_arr = utils.get_phrase(content, n=10)
         # new words
-        nw_arr = utils.get_newwords(content, n=20)
+        if not extname == '.dwg':
+            nw_arr = utils.get_newwords(content, n=20)
         # auto summary
-        sum_arr = utils.get_summary(content, n=5)
+        sum_arr = utils.get_summary(content, n=7)
 
     # give keywords to images
     # ['fname', 'keywords', 'relatedtxt']
@@ -105,7 +120,9 @@ def analysis(fpath, extname, imgdir=None, do_drawings=False):
             cimg['newwords'] = ','.join(kwdic[cimg['fname']][1])
             cimg['docname'] = fpath
 
-    return (','.join(kw_arr), ','.join(freq_arr),
+    return (','.join(kw_arr),
+            # ','.join(freq_arr),
+            ','.join([x + ':' + y for x, y in zip(kw_arr, freq_arr)]),
             ','.join(ph_arr), ','.join(nw_arr), ','.join(sum_arr),
             images, drawings
             )

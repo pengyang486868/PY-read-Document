@@ -22,4 +22,5 @@ token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEiLCJOYW1lIjoicm9
         'Y5OTYsImV4cCI6MTY4OTg1MTc5NiwiaWF0IjoxNTg5MjQ2OTk2LCJpc3MiOiJTQ0M0In0.grzJjGbVp7YtC5yVajMJV' \
         'GNICfkP0wLNbuM6hurm7ys'
 
-analyzing_projects = [9]
+analyzing_projects = [4]
+web_keywords_num = 5

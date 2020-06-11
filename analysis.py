@@ -4,10 +4,12 @@ from cloudservice import get_doctag, create_doctag, delete_doctag
 from cloudservice import create_doctagrel, delete_doctagrel
 from cloudservice import change_step
 from cloudservice import get_docs_byid, fill_docinfo
+from cloudservice import get_all_projs
 import time, os
 import config
 import core
 import utils
+from datetime import datetime
 
 
 def analysis_log(info, info_obj):
@@ -85,7 +87,8 @@ def on_loop(project_id):
                .reset_index()
                )
 
-    basepath = os.path.join(config.root_dir, str(project_id))
+    # basepath = os.path.join(config.root_dir, str(project_id))
+    basepath = config.root_dir
     for indx, dt in docdata.iterrows():
         info_log_obj = {'name': dt['name']}
         if not dt['fileUrl'].startswith('http'):
@@ -112,7 +115,18 @@ def on_loop(project_id):
 
         # 分析成字段
         try:
-            kwords, kwfreq, pharr, nwarr, sumarr, *img_none = core.analysis(curpath, extname, imgdir=None)
+            kwords, kwfreq, pharr, nwarr, sumarr, *img_none = core.analysis(
+                curpath, extname, imgdir=None, do_drawings=True)
+
+            kwords_arr = kwords.split(',')
+            real_kwords = []
+            for kw in kwords_arr:
+                if is_real_kw(kw):
+                    real_kwords.append(kw)
+            if len(real_kwords) > 5:
+                low_kw = real_kwords[5:]
+            else:
+                low_kw = []
         except:
             analysis_log('分析成字段', info_log_obj)
             continue
@@ -122,22 +136,34 @@ def on_loop(project_id):
         try:
             doc_record = get_docs_byid(dt['fileId'], projid=project_id)
             # doc_record['abstract'] = sumarr
+            # updated = {
+            #     "name": doc_record['name'],
+            #     "remark": doc_record['remark'],
+            #     "keyWord": kwords,
+            #     "abstract": sumarr,
+            #     "category": None,
+            #     "url": doc_record['url'],
+            #     "fileSize": doc_record['fileSize'],
+            #     "fileType": doc_record['fileType'],
+            #     "directoryId": doc_record['directoryId'],
+            #     "creatorId": 1,
+            #     "uploaderId": 1,
+            #     "newWords": utils.remove_blank(nwarr),
+            #     "wordFrequency": kwfreq,
+            #     "phrases": pharr
+            # }
             updated = {
-                "name": doc_record['name'],
-                "remark": doc_record['remark'],
-                "keyWord": kwords,
+                # "keyWord": kwords,
+                "keyWord": ','.join(low_kw),
                 "abstract": sumarr,
-                "url": doc_record['url'],
-                "fileSize": doc_record['fileSize'],
-                "fileType": doc_record['fileType'],
-                "directoryId": doc_record['directoryId'],
-                "creatorId": 1,
-                "uploaderId": 1,
                 "newWords": utils.remove_blank(nwarr),
                 "wordFrequency": kwfreq,
                 "phrases": pharr
             }
-            fill_docinfo(doc_record['id'], updated, projid=project_id)
+
+            doc_record.update(updated)
+            # print(doc_record)
+            fill_docinfo(doc_record['id'], doc_record, projid=project_id)
             file_table_write_success = True
         except:
             analysis_log('文件表填入', dt['fileId'])
@@ -145,8 +171,11 @@ def on_loop(project_id):
 
         # 创建新标签并关联
         try:
-            alltags = get_doctag()
-            curtags = kwords.split(',')[:5]
+            alltags = get_doctag(projid=project_id)
+            if len(real_kwords) >= config.web_keywords_num:
+                curtags = real_kwords[:config.web_keywords_num]
+            else:
+                curtags = real_kwords
             dtrels = []
             for curtag in curtags:
                 existq = False
@@ -168,24 +197,59 @@ def on_loop(project_id):
         # 更改task的阶段为已完成
         if file_table_write_success:
             dt['step'] = 2
-            change_step(dt['id'], dt.to_dict(), projid=0)
+            change_step(dt['id'], dt.to_dict(), projid=project_id)
 
         # 删除本地下载文件
         pass
         analysis_log('完成', info_log_obj)
 
     # delete_doctagrel(13, projid=project_id)
-    print()
+    print('end proj')
+
+
+def is_real_kw(kw: str) -> bool:
+    if len(kw) < 2:
+        return False
+    return True
+
+
+def find_needed_project_ids():
+    # docresponse = get_documenttask(projid=0)
+    allproj = get_all_projs()
+    if len(allproj) == 0:
+        return []
+    projs = pd.DataFrame(allproj)['id']
+
+    if len(projs) == 0:
+        return []
+
+    return sorted(set(projs), reverse=True)
+
+
+def exitq() -> bool:
+    with open('stop.cms') as sf:
+        sign = sf.readline()
+    sign = int(sign)
+    if sign > 0:
+        return True
+    return False
 
 
 if __name__ == '__main__':
     # servicetest()
-    projects = config.analyzing_projects
-    # for loop_id in range(1000):
-    loop_id = 1
+    # projects = config.analyzing_projects
+    projects = find_needed_project_ids()
+
+    loop_id = 0
     while True:
+        if exitq():
+            print('exit')
+            print(datetime.now())
+            break
+        loop_id += 1
+        print('loop: ' + str(loop_id))
         for pid in projects:
+            time.sleep(0.1)
             on_loop(project_id=pid)
-            time.sleep(5)
-            loop_id += 1
-            print(loop_id)
+            print('loop: ' + str(loop_id) + ' / proj: ' + str(pid))
+        time.sleep(2)

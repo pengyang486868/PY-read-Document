@@ -109,13 +109,21 @@ def change_step(taskid, data: dict, projid=0):
 
 
 def get_docs_byid(fid, projid=0):
-    url = config.backendserver + '/api/projects/{}/document/files/{}'.format(projid, fid)
+    # url = config.backendserver + '/api/projects/{}/document/files/{}'.format(projid, fid)
+    url = config.backendserver + '/api/projects/{}/entities/documentfile/{}'.format(projid, fid)
     response = get_action(url)
     return response
 
 
 def fill_docinfo(docid, data: dict, projid=0):
-    url = config.backendserver + '/api/projects/{}/document/files?id={}'.format(projid, docid)
+    # url = config.backendserver + '/api/projects/{}/document/files?id={}'.format(projid, docid)
+    url = config.backendserver + '/api/projects/{}/entities/documentfile/{}'.format(projid, docid)
     params = data
     response = put_action(url, params)
     return True
+
+
+def get_all_projs():
+    url = config.backendserver + '/api/projects/all'
+    response = get_action(url)
+    return response
