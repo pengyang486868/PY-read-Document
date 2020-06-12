@@ -135,27 +135,17 @@ def on_loop(project_id):
         file_table_write_success = False
         try:
             doc_record = get_docs_byid(dt['fileId'], projid=project_id)
-            # doc_record['abstract'] = sumarr
-            # updated = {
-            #     "name": doc_record['name'],
-            #     "remark": doc_record['remark'],
-            #     "keyWord": kwords,
-            #     "abstract": sumarr,
-            #     "category": None,
-            #     "url": doc_record['url'],
-            #     "fileSize": doc_record['fileSize'],
-            #     "fileType": doc_record['fileType'],
-            #     "directoryId": doc_record['directoryId'],
-            #     "creatorId": 1,
-            #     "uploaderId": 1,
-            #     "newWords": utils.remove_blank(nwarr),
-            #     "wordFrequency": kwfreq,
-            #     "phrases": pharr
-            # }
+
+            # choose summary
+            real_summary = []
+            for su in sumarr:
+                if is_real_summary(su):
+                    real_summary.append(su)
+
             updated = {
                 # "keyWord": kwords,
                 "keyWord": ','.join(low_kw),
-                "abstract": sumarr,
+                "abstract": ','.join(real_summary),
                 "newWords": utils.remove_blank(nwarr),
                 "wordFrequency": kwfreq,
                 "phrases": pharr
@@ -209,6 +199,19 @@ def on_loop(project_id):
 
 def is_real_kw(kw: str) -> bool:
     if len(kw) < 2:
+        return False
+
+    undercount = 0
+    for c in kw:
+        if c == '_':
+            undercount += 1
+    if undercount / len(kw) > 0.499:
+        return False
+    return True
+
+
+def is_real_summary(su) -> bool:
+    if len(su) < 6:
         return False
     return True
 

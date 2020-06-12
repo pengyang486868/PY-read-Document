@@ -104,7 +104,7 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
         if not extname == '.dwg':
             nw_arr = utils.get_newwords(content, n=20)
         # auto summary
-        sum_arr = utils.get_summary(content, n=7)
+        sum_arr = utils.get_summary(content, n=2)
 
     # give keywords to images
     # ['fname', 'keywords', 'relatedtxt']
@@ -123,7 +123,7 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
     return (','.join(kw_arr),
             # ','.join(freq_arr),
             ','.join([x + ':' + y for x, y in zip(kw_arr, freq_arr)]),
-            ','.join(ph_arr), ','.join(nw_arr), ','.join(sum_arr),
+            ','.join(ph_arr), ','.join(nw_arr), sum_arr,
             images, drawings
             )
 
