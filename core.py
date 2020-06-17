@@ -93,6 +93,16 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
 
     # do analysis
     if content is not None:
+        # too long!!!
+        total_words_count = len(' '.join(content))
+        total_paragraph_count = len(content)
+        max_words = 50000
+        if total_words_count > max_words:
+            paragraph_limit = math.ceil(max_words / total_words_count * total_paragraph_count)
+            content = content[:paragraph_limit]
+            print('limit paragraphs ' + str(paragraph_limit))
+            print('limit words ' + str(len(' '.join(content))))
+
         # key words
         kw_arr = utils.get_keywords(content, config.kw_topk)
         # word frequency array

@@ -46,6 +46,7 @@ def remove_cadliteral(s):
 # \n ' '
 def remove_blank(s: str) -> str:
     result = re.sub(r'\s+', r'', s)
+    result = re.sub(r'\n', r'', result)
     return result
 
 

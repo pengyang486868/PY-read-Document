@@ -22,10 +22,10 @@ def readtext(full_path):
             result = result + textarr
 
     # if too few letters, should try ocr
-    lettercount = sum([len(x) for x in result])
-    letter_per_page_min = 10
-    if lettercount / pagecount < letter_per_page_min:
-        result = readbyocr(full_path)
+    # lettercount = sum([len(x) for x in result])
+    # letter_per_page_min = 10
+    # if lettercount / pagecount < letter_per_page_min:
+    #     result = readbyocr(full_path)
 
     if len(result) < 10:
         return result

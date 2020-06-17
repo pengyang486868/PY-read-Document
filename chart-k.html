@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Awesome-pyecharts</title>
+    <title>K-egg</title>
     <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
 
 </head>
@@ -61,10 +61,15 @@
                 let data = {};
                 data.values = [];
                 data.date = [];
+                data.trade = []
+                data.tradeabs = []
 
                 for (var i = 0; i < rawdata.length; i++) {
                     data.values.push([rawdata[i].o, rawdata[i].c, rawdata[i].l, rawdata[i].h])
                     data.date.push(rawdata[i].date)
+
+                    data.trade.push([rawdata[i].date, rawdata[i].c, rawdata[i].trade])
+                    data.tradeabs.push(rawdata[i].trade)
                 }
 
                 setK(data)
@@ -73,8 +78,8 @@
         }
 
         function setK(data) {
-            var upColor = '#00da3c';
-            var downColor = '#ec0000';
+            var upColor = '#ec0000';
+            var downColor = '#00da3c';
 
             var option_3b529bcc09d745dbabc7010e5b84bbc3 = {
                 backgroundColor: '#fff',
@@ -202,7 +207,7 @@
                         }
                     },
                     {
-                        scale: true,
+                        scale: false,
                         gridIndex: 1,
                         splitNumber: 2,
                         axisLabel: {
@@ -216,7 +221,9 @@
                         },
                         splitLine: {
                             show: false
-                        }
+                        },
+                        min: -2.1,
+                        max: 2.1
                     }
                 ],
                 dataZoom: [{
@@ -258,6 +265,40 @@
                         }
                     },
                     {
+                        name: 'Trade',
+                        data: data.trade,
+                        type: 'scatter',
+                        symbolSize: function (data) {
+                            return Math.abs(data[2]) * 10;
+                        },
+                        label: {
+                            formatter: function (param) {
+                                return param.data[2];
+                            },
+                            emphasis: {
+                                show: true,
+                                formatter: function (param) {
+                                    return param.data[2];
+                                },
+                                position: 'top'
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(120, 36, 50, 0.5)',
+                                shadowOffsetY: 5,
+                                color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+                                    offset: 0,
+                                    color: 'rgb(251, 118, 123)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgb(204, 46, 72)'
+                                }])
+                            }
+                        }
+                    },
+                    {
                         name: 'MA5',
                         type: 'line',
                         data: calculateMA(5, data),
@@ -294,14 +335,16 @@
                         }
                     },
                     {
-                        name: 'Volume',
+                        name: 'Trade_abs',
                         type: 'bar',
                         xAxisIndex: 1,
                         yAxisIndex: 1,
-                        data: data.volumes
+                        data: data.tradeabs,
+                        barWidth: 5
                     }
                 ]
             };
+            console.log(data.trade)
             chart_3b529bcc09d745dbabc7010e5b84bbc3.setOption(option_3b529bcc09d745dbabc7010e5b84bbc3);
         }
     </script>

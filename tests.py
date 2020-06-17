@@ -67,5 +67,17 @@ def test7():
     print(decide)
 
 
+def test8():
+    import pandas as pd
+    from datetime import datetime
+    data = pd.DataFrame([['2017-01-03 09:01:00 2017-01-03', 2888], ['2017-01-03 09:02:00 2017-01-03', 2999]],
+                        columns=['date', 'whatever'])
+    data['time'] = data['date'].apply(lambda x: datetime.strptime(x.split()[1], '%H:%M:%S'))
+    data['hour'] = data['time'].apply(lambda x: x.hour)
+    data['minute'] = data['time'].apply(lambda x: x.minute)
+
+    print(data)
+
+
 if __name__ == '__main__':
-    test7()
+    test8()

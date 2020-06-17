@@ -10,15 +10,15 @@ def readtxt(full_path):
         result.append(para.text)
 
     # table text
+    maxrows = 500
+    rowcount = 0
     for tb in doc.tables:
+        rowcount += len(tb.rows)
+        if rowcount > maxrows:
+            break
         for row in tb.rows:
             for cell in row.cells:
                 result.append(cell.text)
-                # # or
-                # '''text = ''
-                # for p in cell.paragraphs:
-                #     text += p.text
-                # print(text)'''
     return result
 
 

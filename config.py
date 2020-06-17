@@ -5,7 +5,7 @@ root_dir = r'D:\filedata'
 test_username = 'uname'
 nlpserver = 'http://localhost:9027/chlangs'
 
-backendserver = 'http://cloud.ibuildingsh.com'
+backendserver = 'http://cloudtest.ibuildingsh.com'
 
 # token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' \
 #         '.eyJJZCI6IjEiLCJOYW1lIjoicm9vdCIsIlVzZXJUeXBlIjoi6LaF57qn566h55CG5ZGYIiwiQ29tcGFueSI6Iua1i' \

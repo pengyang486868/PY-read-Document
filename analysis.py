@@ -90,7 +90,8 @@ def on_loop(project_id):
     # basepath = os.path.join(config.root_dir, str(project_id))
     basepath = config.root_dir
     for indx, dt in docdata.iterrows():
-        info_log_obj = {'name': dt['name']}
+        info_log_obj = {'id': dt['fileId'], 'name': dt['name']}
+        analysis_log('开始', info_log_obj)
         if not dt['fileUrl'].startswith('http'):
             analysis_log('无文件', info_log_obj)
             continue
@@ -142,11 +143,15 @@ def on_loop(project_id):
                 if is_real_summary(su):
                     real_summary.append(su)
 
+            nwlimit = 900
+            nwarr = utils.remove_blank(nwarr)
+            if len(nwarr) > nwlimit:
+                nwarr = nwarr[:nwlimit]
             updated = {
                 # "keyWord": kwords,
                 "keyWord": ','.join(low_kw),
                 "abstract": ','.join(real_summary),
-                "newWords": utils.remove_blank(nwarr),
+                "newWords": nwarr,
                 "wordFrequency": kwfreq,
                 "phrases": pharr
             }
@@ -155,33 +160,35 @@ def on_loop(project_id):
             # print(doc_record)
             fill_docinfo(doc_record['id'], doc_record, projid=project_id)
             file_table_write_success = True
-        except:
-            analysis_log('文件表填入', dt['fileId'])
+        except Exception as e:
+            analysis_log('文件表填入', info_log_obj)
             continue
 
         # 创建新标签并关联
         try:
-            alltags = get_doctag(projid=project_id)
-            if len(real_kwords) >= config.web_keywords_num:
-                curtags = real_kwords[:config.web_keywords_num]
+            if not real_kwords:
+                analysis_log('无内容', info_log_obj)
             else:
-                curtags = real_kwords
-            dtrels = []
-            for curtag in curtags:
-                existq = False
-                for t in alltags:
-                    if str(t['name']).upper() == str(curtag).upper():
-                        dtrels.append((dt['fileId'], t['id']))
-                        existq = True
-                        break
-                if not existq:
-                    tagid = create_doctag(curtag, projid=project_id)
-                    dtrels.append((dt['fileId'], tagid))
-
-            # 写入关联文件和标签
-            create_doctagrel(dtrels, projid=project_id)
+                alltags = get_doctag(projid=project_id)
+                if len(real_kwords) >= config.web_keywords_num:
+                    curtags = real_kwords[:config.web_keywords_num]
+                else:
+                    curtags = real_kwords
+                dtrels = []
+                for curtag in curtags:
+                    existq = False
+                    for t in alltags:
+                        if str(t['name']).upper() == str(curtag).upper():
+                            dtrels.append((dt['fileId'], t['id']))
+                            existq = True
+                            break
+                    if not existq:
+                        tagid = create_doctag(curtag, projid=project_id)
+                        dtrels.append((dt['fileId'], tagid))
+                # 写入关联文件和标签
+                create_doctagrel(dtrels, projid=project_id)
         except:
-            analysis_log('标签', dt['fileId'])
+            analysis_log('标签', info_log_obj)
             continue
 
         # 更改task的阶段为已完成
