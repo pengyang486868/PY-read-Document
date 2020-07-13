@@ -4,7 +4,7 @@ import config
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
-import re
+import re, os
 
 
 def is_pure_abc(s, number_as_abc=False):

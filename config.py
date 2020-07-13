@@ -7,6 +7,8 @@ nlpserver = 'http://localhost:9027/chlangs'
 
 backendserver = 'http://cloudtest.ibuildingsh.com'
 
+batch_file_upload_root = r'F:\402\testupload'
+
 # token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' \
 #         '.eyJJZCI6IjEiLCJOYW1lIjoicm9vdCIsIlVzZXJUeXBlIjoi6LaF57qn566h55CG5ZGYIiwiQ29tcGFueSI6Iua1i' \
 #         '-ivleWFrOWPuCIsIkNvbXBhbnlJZCI6IjEiLCJuYmYiOjE1ODkyNDY5OTYsImV4cCI6MjU4OTg1MTc5NiwiaWF0IjoxN' \

@@ -127,3 +127,28 @@ def get_all_projs():
     url = config.backendserver + '/api/projects/all'
     response = get_action(url)
     return response
+
+
+def add_file(data, projid=0):
+    url = config.backendserver + '/api/projects/{}/document/files'.format(projid)
+    params = data
+    response = post_action(url, params)
+    return True
+
+
+def add_dir(name, parentid, projid=0):
+    url = config.backendserver + '/api/projects/{}/document/directory'.format(projid)
+    params = {
+        "name": name,
+        "parentId": parentid,
+        "creatorId": 1
+    }
+    response = post_action(url, params)
+    return True
+
+
+def get_dir_subs(dirid, projid=0):
+    url = (config.backendserver +
+           '/api/projects/{}/document/directory?currentDirectoryId={}'.format(projid, dirid))
+    response = get_action(url)
+    return response
