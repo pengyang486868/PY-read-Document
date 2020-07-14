@@ -2,6 +2,7 @@ from win32com import client
 import os
 import shutil
 
+
 def doc2docx(path: str, newdir: str, remove=False):
     if not path.endswith('.doc'):
         return False, None
