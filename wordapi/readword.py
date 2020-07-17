@@ -7,18 +7,24 @@ def readtxt(full_path):
     doc = Document(full_path)
     result = []
     for para in doc.paragraphs:
+        if len(para.text) < 1:
+            continue
         result.append(para.text)
 
     # table text
     maxrows = 500
     rowcount = 0
     for tb in doc.tables:
-        rowcount += len(tb.rows)
-        if rowcount > maxrows:
-            break
-        for row in tb.rows:
-            for cell in row.cells:
-                result.append(cell.text)
+        try:
+            rowcount += len(tb.rows)
+            if rowcount > maxrows:
+                break
+            for row in tb.rows:
+                for cell in row.cells:
+                    if len(cell.text) > 0:
+                        result.append(cell.text)
+        except:
+            continue
     return result
 
 

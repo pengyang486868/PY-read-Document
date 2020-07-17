@@ -50,26 +50,27 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
     nw_arr = []
     sum_arr = []
 
-    # do extract below
-    if extname == '.txt':
-        content = readtxt.read(fpath)
+    if not do_drawings:
+        # do extract below
+        if extname == '.txt':
+            content = readtxt.read(fpath)
 
-    if extname == '.docx':
-        content = readword.readtxt(fpath)
-        images = readword.readimg(fpath, imgdir, str(uuid.uuid4()))
-    if extname == '.doc':
-        content = readword.readtxt(fpath + 'x')
-        images = readword.readimg(fpath + 'x', imgdir, str(uuid.uuid4()))
+        if extname == '.docx':
+            content = readword.readtxt(fpath)
+            images = readword.readimg(fpath, imgdir, str(uuid.uuid4()))
+        if extname == '.doc':
+            content = readword.readtxt(fpath + 'x')
+            images = readword.readimg(fpath + 'x', imgdir, str(uuid.uuid4()))
 
-    if extname == '.pptx':
-        content = readppt.readtxt(fpath)
-        images = readppt.readimg(fpath, imgdir, str(uuid.uuid4()))
-    if extname == '.ppt':
-        content = readppt.readtxt(fpath + 'x')
-        images = readppt.readimg(fpath + 'x', imgdir, str(uuid.uuid4()))
+        if extname == '.pptx':
+            content = readppt.readtxt(fpath)
+            images = readppt.readimg(fpath, imgdir, str(uuid.uuid4()))
+        if extname == '.ppt':
+            content = readppt.readtxt(fpath + 'x')
+            images = readppt.readimg(fpath + 'x', imgdir, str(uuid.uuid4()))
 
-    if extname == '.pdf':
-        content = readpdf.readtext(fpath)
+        if extname == '.pdf':
+            content = readpdf.readtext(fpath)
 
     drawings = None
     do_split_drawing = False
@@ -80,11 +81,11 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
                 drawings = readdxf.split_drawing_byblock(fpath)
 
         if extname == '.dwg':
-            maxtry = 100
+            maxtry = 60
             transpath = fpath.replace('.dwg', '.dxf')
             for ii in range(maxtry):
                 print(ii)
-                time.sleep(2)
+                time.sleep(1)
                 if os.path.isfile(transpath):
                     content = readdxf.readtxt(transpath)
                     if do_split_drawing:
@@ -114,7 +115,7 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
         if not extname == '.dwg':
             nw_arr = utils.get_newwords(content, n=20)
         # auto summary
-        sum_arr = utils.get_summary(content, n=2)
+        sum_arr = utils.get_summary(content, n=10)
 
     # give keywords to images
     # ['fname', 'keywords', 'relatedtxt']

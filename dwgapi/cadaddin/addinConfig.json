@@ -1,8 +1,8 @@
 ﻿{
   "SingleFilePath": "",
   "SingleFileTargetDir": "",
-  "ManyFileDir": "D:\\filedata",
-  "ManyFileTargetDir": "D:\\filedata",
+  "ManyFileDir": "E:\\file-local-analysis",
+  "ManyFileTargetDir": "E:\\file-local-analysis",
   "StopSeconds": "200",
   "Interval": "5"
 }

@@ -73,4 +73,5 @@ def get_dirid(p, curdirid, projid):
 if __name__ == '__main__':
     # do_batch_upload(Path(r'F:\402\004 小洋山资料备份-晓莉'), 240, 42)
     # do_batch_upload(Path(r'F:\402\testupload'), 36, 200)
-    do_batch_upload(Path(r'F:\402\001 交响乐团20130311需合并'), 434, 202)
+    # do_batch_upload(Path(r'F:\402\001 交响乐团20130311需合并'), 434, 202)
+    do_batch_upload(Path(r'F:\402\002 东海园文件汇备份-晓莉'), 587, 634)
