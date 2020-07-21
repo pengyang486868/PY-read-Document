@@ -1,8 +1,9 @@
-from pptapi.readppt import readpptx, readimg,readnotes
+from pptapi.readppt import readpptx, readimg, readnotes
 from pdfapi.pdf2pic import transpic
 from pdfapi import readpdf
 from dwgapi import readdxf
 from wordapi import readword, transdoc
+from rarapi import readrar
 import numpy as np
 
 import os
@@ -20,13 +21,16 @@ if __name__ == '__main__':
 
     wordpath = r'D:\filedata\uname\f/M-bimsys-04+杭州BIM系统.docx'
 
+    zippath = r'F:\402\001 交响乐团20130311需合并\施工方案\交响乐团方案\交响乐团方案2.zip'
+    rarpath = r'F:\402\001 交响乐团20130311需合并\施工方案\排演厅双层板墙模板.rar'
+
     resultdir = r'D:/result'
 
     username = config.test_username
     imgdir = os.path.join(config.root_dir, username, 'image-test')
 
     # r = readimg(pptxpath, resultdir, save_prefix='XXB-')
-    r = readnotes(pptxpath)
+    # r = readnotes(pptxpath)
 
     # pdftxt = readpdf.readtext(pdfpath)
     # print(pdftxt)
@@ -49,4 +53,8 @@ if __name__ == '__main__':
     # cntarr = [1] * 5 + [3] * 3 + [11] * 4 + [12] * 6 + [13] * 48 + [14] * 24 + \
     #          [15] * 30 + [16] * 10 + [17] * 2 + [18]
     # lmin, lmax = readpdf.pdflinelen(cntarr, lenrange=4, minlen=7)
-    print(r)
+
+    r1 = readrar.readzip(zippath, rm_prefix=True, maxnames=5)
+    r2 = readrar.readrar(rarpath, rm_prefix=True)
+    print(r1)
+    print(r2)

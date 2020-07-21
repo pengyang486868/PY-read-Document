@@ -64,10 +64,10 @@ def on_loop(project_id):
                 transppt.ppt2pptx(curpath, basepath, remove=False)
                 curpath = os.path.join(basepath, dt['name'])
 
+            # dwg rar本地转移 在线分析不用
             if extname == '.dwg':
                 shutil.copy(curpath, basepath)
                 curpath = os.path.join(basepath, dt['name'])
-
             if extname == '.rar':
                 shutil.copy(curpath, basepath)
                 curpath = os.path.join(basepath, dt['name'])

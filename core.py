@@ -92,6 +92,9 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
                         drawings = readdxf.split_drawing_byblock(fpath)
                     break
 
+        if extname == '.rar':
+            pass
+
     # do analysis
     if content is not None:
         # too long!!!
