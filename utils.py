@@ -40,6 +40,10 @@ def remove_cadliteral(s):
     else:
         result = re.sub(r'\\P', r' ', result)
         result = re.sub(r'\s+', r' ', result)
+
+    # %%...
+    result = re.sub(r'%%', r'', result)
+
     return result
 
 

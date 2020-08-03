@@ -37,14 +37,12 @@ def on_loop(project_id):
     basepath = r'E:\file-local-analysis'
     for indx, dt in docdata.iterrows():
         info_log_obj = {'id': dt['fileId'], 'name': dt['name']}
-        analysis_log('开始', info_log_obj)
 
         # if not dt['fileUrl'].startswith('http'):
         #     analysis_log('无文件', info_log_obj)
         #     continue
 
         try:
-            # 下载文件到本地文件夹
             # curpath = os.path.join(basepath, dt['name'])
             curpath = dt['fileUrl']
 
@@ -53,8 +51,9 @@ def on_loop(project_id):
             extname = ext_tuple[1]
 
             # 补写
-            if extname != '.dwg' and extname != '.rar':
-                continue
+            # if extname != '.dwg' and extname != '.rar':
+            #     continue
+            # analysis_log('开始', info_log_obj)
             # 补写
 
             if extname == '.doc':
@@ -68,15 +67,15 @@ def on_loop(project_id):
             if extname == '.dwg':
                 shutil.copy(curpath, basepath)
                 curpath = os.path.join(basepath, dt['name'])
-            if extname == '.rar':
+            if extname == '.rar' or extname == '.zip':
                 shutil.copy(curpath, basepath)
                 curpath = os.path.join(basepath, dt['name'])
 
             # 很大的
-            if os.path.getsize(curpath) > 50 * 1000 * 1000:
+            if os.path.getsize(dt['fileUrl']) > 100 * 1000 * 1000:
                 analysis_log('文件过大', info_log_obj)
                 continue
-        except:
+        except Exception as e:
             analysis_log('下载和转换文件', info_log_obj)
             continue
 
@@ -203,7 +202,7 @@ def find_needed_project_ids():
     #     return []
     #
     # return sorted(set(projs), reverse=True)
-    return [434]
+    return [687]
 
 
 def exitq() -> bool:

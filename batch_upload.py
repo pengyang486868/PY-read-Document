@@ -46,8 +46,11 @@ def do_batch_upload(dpath: Path, projid, rootid):
             do_batch_upload(thing, projid, get_dirid(str(thing), rootid, projid))
         # 是文件则上传
         if thing.is_file():
-            uploadfile(str(thing), rootid, projid)
-            print('upload ' + str(thing))
+            try:
+                uploadfile(str(thing), rootid, projid)
+                print('upload ' + str(thing))
+            except:
+                print('failed ' + str(thing))
 
 
 # if exist return id, if not exist create it then return id
@@ -74,4 +77,5 @@ if __name__ == '__main__':
     # do_batch_upload(Path(r'F:\402\004 小洋山资料备份-晓莉'), 240, 42)
     # do_batch_upload(Path(r'F:\402\testupload'), 36, 200)
     # do_batch_upload(Path(r'F:\402\001 交响乐团20130311需合并'), 434, 202)
-    do_batch_upload(Path(r'F:\402\002 东海园文件汇备份-晓莉'), 587, 634)
+    # do_batch_upload(Path(r'F:\dfyyfile\东方医院'), projid=230, rootid=2211)
+    do_batch_upload(Path(r'D:\技术群文档'), projid=687, rootid=2370)

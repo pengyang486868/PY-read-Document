@@ -3,6 +3,6 @@
   "SingleFileTargetDir": "",
   "ManyFileDir": "E:\\file-local-analysis",
   "ManyFileTargetDir": "E:\\file-local-analysis",
-  "StopSeconds": "200",
+  "StopSeconds": "20000",
   "Interval": "5"
 }

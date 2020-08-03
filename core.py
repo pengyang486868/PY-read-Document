@@ -3,6 +3,7 @@ from wordapi import readword, transdoc
 from pptapi import readppt, transppt
 from pdfapi import readpdf
 from dwgapi import readdxf
+from rarapi import readrar
 from knowledge import graph
 import utils
 import config
@@ -50,8 +51,8 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
     nw_arr = []
     sum_arr = []
 
-    if not do_drawings:
-        # do extract below
+    # if not do_drawings:
+    if True:
         if extname == '.txt':
             content = readtxt.read(fpath)
 
@@ -81,11 +82,11 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
                 drawings = readdxf.split_drawing_byblock(fpath)
 
         if extname == '.dwg':
-            maxtry = 60
+            maxtry = 20
             transpath = fpath.replace('.dwg', '.dxf')
             for ii in range(maxtry):
                 print(ii)
-                time.sleep(1)
+                time.sleep(2)
                 if os.path.isfile(transpath):
                     content = readdxf.readtxt(transpath)
                     if do_split_drawing:
@@ -93,7 +94,10 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
                     break
 
         if extname == '.rar':
-            pass
+            content = readrar.readrar(fpath, rm_prefix=True, maxnames=10)
+
+        if extname == '.zip':
+            content = readrar.readzip(fpath, rm_prefix=True, maxnames=10)
 
     # do analysis
     if content is not None:
@@ -118,7 +122,10 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
         if not extname == '.dwg':
             nw_arr = utils.get_newwords(content, n=20)
         # auto summary
-        sum_arr = utils.get_summary(content, n=10)
+        if extname == '.rar' or extname == '.zip':
+            sum_arr = content
+        else:
+            sum_arr = utils.get_summary(content, n=10)
 
     # give keywords to images
     # ['fname', 'keywords', 'relatedtxt']
