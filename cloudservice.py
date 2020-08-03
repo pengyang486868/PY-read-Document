@@ -129,6 +129,12 @@ def get_all_projs():
     return response
 
 
+def get_file_projs():
+    url = config.backendserver + '/api/projects/0/entities/documenttask'
+    response = get_action(url)
+    return set([x['projectId'] for x in response])
+
+
 def add_file(data, projid=0):
     url = config.backendserver + '/api/projects/{}/document/files'.format(projid)
     params = data

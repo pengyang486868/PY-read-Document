@@ -4,7 +4,7 @@ from cloudservice import get_doctag, create_doctag, delete_doctag
 from cloudservice import create_doctagrel, delete_doctagrel
 from cloudservice import change_step
 from cloudservice import get_docs_byid, fill_docinfo
-from cloudservice import get_all_projs
+from cloudservice import get_all_projs, get_file_projs
 import time, os
 import config
 import core
@@ -76,11 +76,11 @@ def reset_steps():
 def on_loop(project_id):
     docresponse = get_documenttask(projid=project_id)
     docdata = pd.DataFrame(docresponse)
-
     if len(docdata) == 0:
         return
 
     docdata = docdata[docdata['step'] == 1]
+    docdata = docdata.tail(config.n_for_project_in_loop)
 
     docdata = (docdata.sort_values('name')
                .dropna(subset=['fileUrl', 'step'])
@@ -91,7 +91,7 @@ def on_loop(project_id):
     basepath = config.root_dir
     for indx, dt in docdata.iterrows():
         info_log_obj = {'id': dt['fileId'], 'name': dt['name']}
-        analysis_log('开始', info_log_obj)
+        # analysis_log('开始', info_log_obj)
         if not dt['fileUrl'].startswith('http'):
             analysis_log('无文件', info_log_obj)
             continue
@@ -106,6 +106,14 @@ def on_loop(project_id):
 
         # 转换文件
         try:
+            # 很大的
+            if os.path.getsize(curpath) > 100 * 1000 * 1000:
+                analysis_log('文件过大', info_log_obj)
+                dt['step'] = 4
+                change_step(dt['id'], dt.to_dict(), projid=project_id)
+                analysis_log('完成', info_log_obj)
+                continue
+
             ext_tuple = os.path.splitext(dt['name'])
             fname = ext_tuple[0]
             extname = ext_tuple[1]
@@ -142,6 +150,9 @@ def on_loop(project_id):
             for su in sumarr:
                 if is_real_summary(su):
                     real_summary.append(su)
+            summarylimit = 3
+            if len(real_summary) > summarylimit:
+                real_summary = sorted(real_summary, key=lambda x: len(x), reverse=True)[:summarylimit]
 
             nwlimit = 900
             nwarr = utils.remove_blank(nwarr)
@@ -228,12 +239,12 @@ def find_needed_project_ids():
     allproj = get_all_projs()
     if len(allproj) == 0:
         return []
-    projs = pd.DataFrame(allproj)['id']
+    projs = pd.DataFrame(allproj)['id'].tolist()
 
     if len(projs) == 0:
         return []
 
-    return sorted(set(projs), reverse=True)
+    return sorted(set([p for p in projs if p not in config.exclude_projects]), reverse=True)
 
 
 def exitq() -> bool:
@@ -248,7 +259,8 @@ def exitq() -> bool:
 if __name__ == '__main__':
     # servicetest()
     # projects = config.analyzing_projects
-    projects = find_needed_project_ids()
+    projects = find_needed_project_ids()  # with exclude
+    have_file_projects = get_file_projs()
 
     loop_id = 0
     while True:
@@ -259,6 +271,8 @@ if __name__ == '__main__':
         loop_id += 1
         print('loop: ' + str(loop_id))
         for pid in projects:
+            if pid not in have_file_projects:
+                continue
             time.sleep(0.1)
             on_loop(project_id=pid)
             print('loop: ' + str(loop_id) + ' / proj: ' + str(pid))

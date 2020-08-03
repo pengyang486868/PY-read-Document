@@ -6,6 +6,8 @@ test_username = 'uname'
 nlpserver = 'http://localhost:9027/chlangs'
 
 backendserver = 'http://cloudtest.ibuildingsh.com'
+n_for_project_in_loop = 2
+exclude_projects = [685]
 
 batch_file_upload_root = r'F:\402\testupload'
 
