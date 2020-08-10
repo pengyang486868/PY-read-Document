@@ -1,6 +1,7 @@
 import os
-from cloudservice import add_file, add_dir, get_dir_subs
+from cloudservice import add_file, add_dir, get_dir_subs, get_root_dir_id
 from pathlib import Path
+import pandas as pd
 
 
 def test():
@@ -57,7 +58,7 @@ def do_batch_upload(dpath: Path, projid, rootid):
 def get_dirid(p, curdirid, projid):
     subs = get_dir_subs(curdirid, projid)
     for sd in subs:
-        if sd['name'] == p:
+        if sd['name'] == p.split('\\')[-1]:
             return sd['id']
 
     # 如果没返回 就是没这个文件夹 创建一个
@@ -78,4 +79,24 @@ if __name__ == '__main__':
     # do_batch_upload(Path(r'F:\402\testupload'), 36, 200)
     # do_batch_upload(Path(r'F:\402\001 交响乐团20130311需合并'), 434, 202)
     # do_batch_upload(Path(r'F:\dfyyfile\东方医院'), projid=230, rootid=2211)
-    do_batch_upload(Path(r'D:\技术群文档'), projid=687, rootid=2370)
+    # do_batch_upload(Path(r'D:\技术群文档'), projid=687, rootid=2370)
+    # http:\\10.6.0.50:6789\files\工程资料 01\01 工程资料\404\008 解放日报-张雷\1.txt
+    # do_batch_upload(Path(r'\\192.168.11.70\工程资料 01\01 工程资料\404\008 解放日报-张雷'), projid=85, rootid=2422)
+
+    # proj_infos = [['401', '001 中国馆', 196]]
+    proj_infos = pd.read_csv(r'.\projs.csv')
+    for indx, info in proj_infos.iterrows():
+        subdir = str(info['sub'])
+        projname = info['name']
+        projid = info['pid']
+
+        pathstr = os.path.join(r'\\192.168.11.70\工程资料 01\01 工程资料', subdir, projname)
+        test = Path(pathstr)
+
+        try:
+            add_dir(projname, None, projid)
+        except:
+            pass
+        rootid = get_root_dir_id(projid)
+
+        do_batch_upload(Path(pathstr), projid=projid, rootid=rootid)

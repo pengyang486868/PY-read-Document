@@ -1,10 +1,11 @@
 import pandas as pd
+import numpy as np
 from cloudservice import get_documenttask, download_doc
 from cloudservice import get_doctag, create_doctag, delete_doctag
 from cloudservice import create_doctagrel, delete_doctagrel
 from cloudservice import change_step
 from cloudservice import get_docs_byid, fill_docinfo
-from cloudservice import get_all_projs
+from cloudservice import get_all_projs, get_file_projs
 import time, os, shutil
 import config
 import core
@@ -26,6 +27,7 @@ def on_loop(project_id):
         return
 
     docdata = docdata[docdata['step'] == 1]
+    docdata = docdata.tail(config.n_for_project_in_loop)
 
     docdata = (docdata
                # .sort_values('name')
@@ -37,6 +39,8 @@ def on_loop(project_id):
     basepath = r'E:\file-local-analysis'
     for indx, dt in docdata.iterrows():
         info_log_obj = {'id': dt['fileId'], 'name': dt['name']}
+        print()
+        analysis_log('开始', info_log_obj)
 
         # if not dt['fileUrl'].startswith('http'):
         #     analysis_log('无文件', info_log_obj)
@@ -193,16 +197,8 @@ def is_real_summary(su) -> bool:
 
 
 def find_needed_project_ids():
-    # allproj = get_all_projs()
-    # if len(allproj) == 0:
-    #     return []
-    # projs = pd.DataFrame(allproj)['id']
-    #
-    # if len(projs) == 0:
-    #     return []
-    #
-    # return sorted(set(projs), reverse=True)
-    return [687]
+    pids = np.loadtxt(r'.\ftp-pids.csv', dtype=int)
+    return pids
 
 
 def exitq() -> bool:
@@ -215,9 +211,23 @@ def exitq() -> bool:
 
 
 if __name__ == '__main__':
-    # servicetest()
-    # projects = config.analyzing_projects
-    projects = find_needed_project_ids()
+    # projects = find_needed_project_ids()
+    # loop_id = 0
+    # while True:
+    #     if exitq():
+    #         print('exit')
+    #         print(datetime.now())
+    #         break
+    #     loop_id += 1
+    #     print('loop: ' + str(loop_id))
+    #     for pid in projects:
+    #         time.sleep(0.1)
+    #         on_loop(project_id=pid)
+    #         print('loop: ' + str(loop_id) + ' / proj: ' + str(pid))
+    #     time.sleep(2)
+
+    projects = find_needed_project_ids()  # with exclude
+    have_file_projects = get_file_projs()
 
     loop_id = 0
     while True:
@@ -228,6 +238,8 @@ if __name__ == '__main__':
         loop_id += 1
         print('loop: ' + str(loop_id))
         for pid in projects:
+            if pid not in have_file_projects:
+                continue
             time.sleep(0.1)
             on_loop(project_id=pid)
             print('loop: ' + str(loop_id) + ' / proj: ' + str(pid))

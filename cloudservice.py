@@ -129,9 +129,11 @@ def get_all_projs():
     return response
 
 
-def get_file_projs():
+def get_file_projs(onlyid=True):
     url = config.backendserver + '/api/projects/0/entities/documenttask'
     response = get_action(url)
+    if not onlyid:
+        return response
     return set([x['projectId'] for x in response])
 
 
@@ -158,3 +160,13 @@ def get_dir_subs(dirid, projid=0):
            '/api/projects/{}/document/directory?currentDirectoryId={}'.format(projid, dirid))
     response = get_action(url)
     return response
+
+
+def get_root_dir_id(projid=0):
+    url = (config.backendserver +
+           '/api/projects/{}/entities/documentdirectory'.format(projid))
+    response = get_action(url)
+    for d in response:
+        if not d['parentId']:
+            return d['id']
+    return 0
