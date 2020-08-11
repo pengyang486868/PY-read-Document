@@ -78,6 +78,8 @@ def on_loop(project_id):
             # 很大的
             if os.path.getsize(dt['fileUrl']) > 100 * 1000 * 1000:
                 analysis_log('文件过大', info_log_obj)
+                dt['step'] = 2
+                change_step(dt['id'], dt.to_dict(), projid=project_id)
                 continue
         except Exception as e:
             analysis_log('下载和转换文件', info_log_obj)
@@ -100,6 +102,11 @@ def on_loop(project_id):
         except Exception as e:
             analysis_log('分析成字段', info_log_obj)
             print(e)
+
+            # avoid always fail
+            dt['step'] = 2
+            change_step(dt['id'], dt.to_dict(), projid=project_id)
+            # avoid always fail
             continue
 
         # 文件表写入字段
@@ -241,6 +248,6 @@ if __name__ == '__main__':
             if pid not in have_file_projects:
                 continue
             time.sleep(0.1)
-            on_loop(project_id=pid)
             print('loop: ' + str(loop_id) + ' / proj: ' + str(pid))
+            on_loop(project_id=pid)
         time.sleep(2)
