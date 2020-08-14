@@ -51,7 +51,10 @@ def do_batch_upload(dpath: Path, projid, rootid):
                 uploadfile(str(thing), rootid, projid)
                 print('upload ' + str(thing))
             except:
-                print('failed ' + str(thing))
+                try:
+                    print('failed ' + str(thing))
+                except:
+                    print('solid failed')
 
 
 # if exist return id, if not exist create it then return id
@@ -81,22 +84,22 @@ if __name__ == '__main__':
     # do_batch_upload(Path(r'F:\dfyyfile\东方医院'), projid=230, rootid=2211)
     # do_batch_upload(Path(r'D:\技术群文档'), projid=687, rootid=2370)
     # http:\\10.6.0.50:6789\files\工程资料 01\01 工程资料\404\008 解放日报-张雷\1.txt
-    # do_batch_upload(Path(r'\\192.168.11.70\工程资料 01\01 工程资料\404\008 解放日报-张雷'), projid=85, rootid=2422)
+    do_batch_upload(Path(r'\\192.168.11.70\工程资料 02\03 工程资料\404\国金资料'), projid=183, rootid=4000)
 
     # proj_infos = [['401', '001 中国馆', 196]]
-    proj_infos = pd.read_csv(r'.\projs.csv')
-    for indx, info in proj_infos.iterrows():
-        subdir = str(info['sub'])
-        projname = info['name']
-        projid = info['pid']
-
-        pathstr = os.path.join(r'\\192.168.11.70\工程资料 01\01 工程资料', subdir, projname)
-        test = Path(pathstr)
-
-        try:
-            add_dir(projname, None, projid)
-        except:
-            pass
-        rootid = get_root_dir_id(projid)
-
-        do_batch_upload(Path(pathstr), projid=projid, rootid=rootid)
+    # proj_infos = pd.read_csv(r'.\projs.csv')
+    # for indx, info in proj_infos.iterrows():
+    #     subdir = str(info['sub'])
+    #     projname = info['name']
+    #     projid = info['pid']
+    #
+    #     pathstr = os.path.join(r'\\192.168.11.70\工程资料 01\01 工程资料', subdir, projname)
+    #     test = Path(pathstr)
+    #
+    #     try:
+    #         add_dir(projname, None, projid)
+    #     except:
+    #         pass
+    #     rootid = get_root_dir_id(projid)
+    #
+    #     do_batch_upload(Path(pathstr), projid=projid, rootid=rootid)

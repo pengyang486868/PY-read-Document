@@ -35,4 +35,5 @@ if __name__ == "__main__":
     # downloadfile(ftp, "Faint.mp4", "C:/Users/Administrator/Desktop/test.mp4")
     # uploadfile(ftp, "C:/Users/Administrator/Desktop/test.mp4", "test.mp4")
     # ftp.quit()
-    print(now_have_file_projs())
+    havef = now_have_file_projs()
+    havef.to_csv(r'.\havef.csv')

@@ -46,15 +46,15 @@ if __name__ == '__main__':
     # np.savetxt(r'D:\dwgtxt.txt', r, encoding='utf-8',fmt='%s')
     # r = readdxf.readinfo(dxfpath)
 
-    # transtest_origin = r'D:\data\newexp-word03test.doc'
-    # transtest_target = r'D:\data'
-    # transdoc.doc2docx(transtest_origin, transtest_target)
+    transtest_origin = r'D:\施工组织设计15.doc'
+    transtest_target = r'D:\data'
+    transdoc.doc2docx(transtest_origin, transtest_target)
 
     # cntarr = [1] * 5 + [3] * 3 + [11] * 4 + [12] * 6 + [13] * 48 + [14] * 24 + \
     #          [15] * 30 + [16] * 10 + [17] * 2 + [18]
     # lmin, lmax = readpdf.pdflinelen(cntarr, lenrange=4, minlen=7)
 
-    r1 = readrar.readzip(zippath, rm_prefix=True, maxnames=5)
-    r2 = readrar.readrar(rarpath, rm_prefix=True)
-    print(r1)
-    print(r2)
+    # r1 = readrar.readzip(zippath, rm_prefix=True, maxnames=5)
+    # r2 = readrar.readrar(rarpath, rm_prefix=True)
+    # print(r1)
+    # print(r2)

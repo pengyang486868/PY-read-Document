@@ -170,3 +170,15 @@ def get_root_dir_id(projid=0):
         if not d['parentId']:
             return d['id']
     return 0
+
+
+def add_proj_simple(pname, pnumber, pstage, parea):
+    url = config.backendserver + '/api/projects'
+    params = {
+        "name": pname,
+        "code": pnumber,
+        "stage": pstage,
+        "area": parea
+    }
+    response = post_action(url, params)
+    return True
