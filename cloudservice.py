@@ -141,7 +141,7 @@ def add_file(data, projid=0):
     url = config.backendserver + '/api/projects/{}/document/files'.format(projid)
     params = data
     response = post_action(url, params)
-    return True
+    return response
 
 
 def add_dir(name, parentid, projid=0):

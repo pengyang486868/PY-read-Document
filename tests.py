@@ -87,6 +87,10 @@ class 牛人:
         print('我是牛人 ' + self.名字)
 
 
+def test_oss():
+    import ossconn
+
+
 if __name__ == '__main__':
     林松 = 牛人('林松啊')
     林松.嚎()

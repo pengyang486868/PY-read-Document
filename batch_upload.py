@@ -33,7 +33,8 @@ def uploadfile(fpath, dirid, projid):
         "wordFrequency": "",
         "phrases": ""
     }
-    add_file(fdata, projid)
+    r = add_file(fdata, projid)
+    return r
 
 
 def do_batch_upload(dpath: Path, projid, rootid):
@@ -78,14 +79,15 @@ def get_dirid(p, curdirid, projid):
 
 
 if __name__ == '__main__':
+    pass
     # do_batch_upload(Path(r'F:\402\004 小洋山资料备份-晓莉'), 240, 42)
     # do_batch_upload(Path(r'F:\402\testupload'), 36, 200)
     # do_batch_upload(Path(r'F:\402\001 交响乐团20130311需合并'), 434, 202)
     # do_batch_upload(Path(r'F:\dfyyfile\东方医院'), projid=230, rootid=2211)
     # do_batch_upload(Path(r'D:\技术群文档'), projid=687, rootid=2370)
     # http:\\10.6.0.50:6789\files\工程资料 01\01 工程资料\404\008 解放日报-张雷\1.txt
-    do_batch_upload(Path(r'\\192.168.11.70\工程资料 02\03 工程资料\404\国金资料'), projid=183, rootid=4000)
-
+    # do_batch_upload(Path(r'\\192.168.11.70\工程资料 02\03 工程资料\404\国金资料'), projid=183, rootid=4000)
+    # uploadfile(r'E:\work\论文\空调故障诊断与风险评估.pdf',projid=33,dirid=38292)
     # proj_infos = [['401', '001 中国馆', 196]]
     # proj_infos = pd.read_csv(r'.\projs.csv')
     # for indx, info in proj_infos.iterrows():
