@@ -5,6 +5,7 @@ from cloudservice import create_doctagrel, delete_doctagrel
 from cloudservice import change_step
 from cloudservice import get_docs_byid, fill_docinfo
 from cloudservice import get_all_projs, get_file_projs
+from cloudservice import add_attachment
 import time, os
 import config
 import core
@@ -89,6 +90,7 @@ def on_loop(project_id):
 
     # basepath = os.path.join(config.root_dir, str(project_id))
     basepath = config.root_dir
+    imgdir = os.path.join(config.root_dir, 'images')
     for indx, dt in docdata.iterrows():
         info_log_obj = {'id': dt['fileId'], 'name': dt['name']}
         # analysis_log('开始', info_log_obj)
@@ -124,8 +126,8 @@ def on_loop(project_id):
 
         # 分析成字段
         try:
-            kwords, kwfreq, pharr, nwarr, sumarr, *img_none = core.analysis(
-                curpath, extname, imgdir=None, do_drawings=True)
+            kwords, kwfreq, pharr, nwarr, sumarr, attaimges, *drawing_none = core.analysis(
+                curpath, extname, imgdir=imgdir, do_drawings=True)
 
             kwords_arr = kwords.split(',')
             real_kwords = []
@@ -138,6 +140,33 @@ def on_loop(project_id):
                 low_kw = []
         except:
             analysis_log('分析成字段', info_log_obj)
+            continue
+
+        # 图片附件
+        try:
+            # 上传oss
+            upload_result = core.upload_images(attaimges)
+
+            # 写入附件表
+            for atta in upload_result:
+                atta_obj = {
+                    "name": atta['name'],
+                    "remark": "",
+                    "keyword": "",
+                    "abstract": utils.remove_blank(atta['abstract']),
+                    "url": atta['url'],
+                    "fileSize": atta['fileSize'],
+                    "fileType": atta['fileType'],
+                    "newWords": "",
+                    "wordFrequency": "",
+                    "phrases": "",
+                    "linkType": "文件关联图片",
+                    "fileId": dt['fileId']
+                }
+                add_attachment(atta_obj, projid=project_id)
+        except Exception as e:
+            print(e)
+            analysis_log('图片附件', info_log_obj)
             continue
 
         # 文件表写入字段
@@ -258,9 +287,10 @@ def exitq() -> bool:
 
 if __name__ == '__main__':
     # servicetest()
-    # projects = config.analyzing_projects
-    projects = find_needed_project_ids()  # with exclude
-    have_file_projects = get_file_projs()
+    # projects = find_needed_project_ids()  # with exclude
+    projects = [33]
+    have_file_projects = [33]
+    # have_file_projects = get_file_projs()
 
     loop_id = 0
     while True:

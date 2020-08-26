@@ -1,4 +1,5 @@
 from docx import Document
+import utils
 import os
 import re
 
@@ -31,6 +32,9 @@ def readtxt(full_path):
 def readimg(full_path, savedir, save_prefix=''):
     if not savedir:
         return
+    savedir = os.path.join(savedir, utils.generate_dirname())
+    os.mkdir(savedir)
+
     doc = Document(full_path)
     doc_part = doc.part
     imgcount = 0
@@ -78,7 +82,7 @@ def readimg(full_path, savedir, save_prefix=''):
         fr.close()
 
         # find related text
-        imginfo.append({'fname': fname,
+        imginfo.append({'fname': os.path.join(savedir, fname),
                         'relatedtxt': contextdic[rID] if rID in contextdic else ''})
 
     return imginfo

@@ -7,6 +7,7 @@ from rarapi import readrar
 from knowledge import graph
 import utils
 import config
+import ossconn
 import uuid
 import numpy as np
 from model import FileInfo, ImageInfo
@@ -24,6 +25,7 @@ import math
 from datetime import datetime
 import time
 import os
+from PIL import Image
 
 
 # transform file format
@@ -147,6 +149,25 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
             ','.join(ph_arr), ','.join(nw_arr), sum_arr,
             images, drawings
             )
+
+
+def upload_images(images, limit=64):
+    result = []
+    for img in images:
+        try:
+            im = Image.open(img['fname'])
+            if im.width < limit or im.height < limit:
+                continue
+
+            imgurl = ossconn.upload_to_oss(img['fname'])
+            result.append({'url': imgurl, 'name': os.path.split(img['fname'])[-1],
+                           'abstract': img['relatedtxt'],
+                           'fileType': os.path.splitext(img['fname'])[-1],
+                           'fileSize': os.path.getsize(img['fname'])})
+        except:
+            continue
+
+    return result
 
 
 # clustering

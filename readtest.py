@@ -8,9 +8,10 @@ import numpy as np
 
 import os
 import config
+import uuid
 
 if __name__ == '__main__':
-    pptxpath = r'D:\qqsave\854525261\FileRecv\医院建筑bim运维与智能决策系统研究与应用-中施企协科技进步奖申报.pptx'
+    pptxpath = r'D:\qqsave\854525261\FileRecv\新员工培训之《方案管理》.pptx'
     # pptxpath = r'D:\filedata\uname\f/C-technical-05+第二节-混凝土灌注桩施工.pptx'
     pdfpath = r'E:\contract.pdf'
     # pdfpath = r'D:/filedata/uname\f\M-bimsys-11+广联达BIM体系.pdf'
@@ -19,7 +20,7 @@ if __name__ == '__main__':
     # dxfpath = r'D:\filedata\uname\dwg/D-commercial-01+来福士T2-min.dxf'
     dxfpath = r'D:\filedata\uname\儿童医院电气-min.dxf'
 
-    wordpath = r'D:\filedata\uname\f/M-bimsys-04+杭州BIM系统.docx'
+    wordpath = r'E:\file-local-analysis\室外总体施工方案A.docx'
 
     zippath = r'F:\402\001 交响乐团20130311需合并\施工方案\交响乐团方案\交响乐团方案2.zip'
     rarpath = r'F:\402\001 交响乐团20130311需合并\施工方案\排演厅双层板墙模板.rar'
@@ -27,7 +28,10 @@ if __name__ == '__main__':
     resultdir = r'D:/result'
 
     username = config.test_username
-    imgdir = os.path.join(config.root_dir, username, 'image-test')
+    imgdir = os.path.join(config.root_dir, 'images')
+    r = readimg(pptxpath, imgdir, str(uuid.uuid4()))
+    # r = readword.readimg(wordpath, imgdir, str(uuid.uuid4()))
+    print(r)
 
     # r = readimg(pptxpath, resultdir, save_prefix='XXB-')
     # r = readnotes(pptxpath)
@@ -46,9 +50,9 @@ if __name__ == '__main__':
     # np.savetxt(r'D:\dwgtxt.txt', r, encoding='utf-8',fmt='%s')
     # r = readdxf.readinfo(dxfpath)
 
-    transtest_origin = r'D:\施工组织设计15.doc'
-    transtest_target = r'D:\data'
-    transdoc.doc2docx(transtest_origin, transtest_target)
+    # transtest_origin = r'D:\施工组织设计15.doc'
+    # transtest_target = r'D:\data'
+    # transdoc.doc2docx(transtest_origin, transtest_target)
 
     # cntarr = [1] * 5 + [3] * 3 + [11] * 4 + [12] * 6 + [13] * 48 + [14] * 24 + \
     #          [15] * 30 + [16] * 10 + [17] * 2 + [18]

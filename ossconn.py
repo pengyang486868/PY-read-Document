@@ -39,7 +39,3 @@ def upload_to_oss(fpath, prefix='ATTA_', fobjname=None):
     signed = bucket.sign_url('GET', fobjname, expire, slash_safe=True)
     return signed.split('?')[0]
 
-
-if __name__ == '__main__':
-    r = upload_to_oss(r'E:\work\论文\基于BIM的运维管理研究与应用综述_胡振中.caj')
-    print(r)

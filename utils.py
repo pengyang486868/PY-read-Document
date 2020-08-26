@@ -4,7 +4,7 @@ import config
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
-import re, os
+import re, os, uuid
 
 
 def is_pure_abc(s, number_as_abc=False):
@@ -162,3 +162,7 @@ def is_company_many(arr):
     params = {'t': [s + magicstr for s in arr]}
     response = post_action(url, params)
     return response['result']
+
+
+def generate_dirname():
+    return str(uuid.uuid4())

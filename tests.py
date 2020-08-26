@@ -89,8 +89,12 @@ class 牛人:
 
 def test_oss():
     import ossconn
+    fpath = r'C:\Users\admin\Documents\WeChat Files\pengyang486868\FileStorage\File\2020-08\运维项目现场工作汇总4.1.docx'
+    r = ossconn.upload_to_oss(fpath)
+    print(r)
 
 
 if __name__ == '__main__':
-    林松 = 牛人('林松啊')
-    林松.嚎()
+    # 林松 = 牛人('林松啊')
+    # 林松.嚎()
+    test_oss()

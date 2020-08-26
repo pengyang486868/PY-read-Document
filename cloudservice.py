@@ -182,3 +182,10 @@ def add_proj_simple(pname, pnumber, pstage, parea):
     }
     response = post_action(url, params)
     return True
+
+
+def add_attachment(atta,projid=0):
+    url = config.backendserver + '/api/projects/{}/files/attachments'.format(projid)
+    params = atta
+    response = post_action(url, params)
+    return True

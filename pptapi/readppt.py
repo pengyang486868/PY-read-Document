@@ -1,5 +1,6 @@
 import os
 from pptx import Presentation
+import utils
 
 
 def readnotes(path):
@@ -35,6 +36,9 @@ def readtxt(path):
 def readimg(path, savedir, save_prefix=''):
     if not savedir:
         return
+    savedir = os.path.join(savedir, utils.generate_dirname())
+    os.mkdir(savedir)
+
     ppt = Presentation(path)
     imgnum = 0
     imginfo = []
@@ -54,7 +58,7 @@ def readimg(path, savedir, save_prefix=''):
                     imgnum += 1
                     fname = save_prefix + '-' + str(indx) + '-' + str(imgnum) + '-' + shape.image.filename
                     imginfo_slide.append(
-                        {'fname': fname, 'relatedtxt': '',
+                        {'fname': os.path.join(savedir, fname), 'relatedtxt': '',
                          'x': shape.left / coordinate_scale + shape.width / coordinate_scale / 2,
                          'y': shape.top / coordinate_scale + shape.height / coordinate_scale / 2})
 
