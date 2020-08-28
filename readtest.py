@@ -16,12 +16,9 @@ if __name__ == '__main__':
     pdfpath = r'E:\contract.pdf'
     # pdfpath = r'D:/filedata/uname\f\M-bimsys-11+广联达BIM体系.pdf'
     pdftxtpath = r'D:/data/pdftxt.pdf'
-
     # dxfpath = r'D:\filedata\uname\dwg/D-commercial-01+来福士T2-min.dxf'
     dxfpath = r'D:\filedata\uname\儿童医院电气-min.dxf'
-
-    wordpath = r'E:\file-local-analysis\室外总体施工方案A.docx'
-
+    wordpath = r'D:\filedata\ZL-1710311359-259_土建质量整改单.docx'
     zippath = r'F:\402\001 交响乐团20130311需合并\施工方案\交响乐团方案\交响乐团方案2.zip'
     rarpath = r'F:\402\001 交响乐团20130311需合并\施工方案\排演厅双层板墙模板.rar'
 
@@ -29,8 +26,9 @@ if __name__ == '__main__':
 
     username = config.test_username
     imgdir = os.path.join(config.root_dir, 'images')
-    r = readimg(pptxpath, imgdir, str(uuid.uuid4()))
-    # r = readword.readimg(wordpath, imgdir, str(uuid.uuid4()))
+
+    # r = readimg(pptxpath, imgdir, str(uuid.uuid4()))
+    r = readword.readimg(wordpath, imgdir, str(uuid.uuid4()))
     print(r)
 
     # r = readimg(pptxpath, resultdir, save_prefix='XXB-')

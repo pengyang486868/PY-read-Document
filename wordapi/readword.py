@@ -46,9 +46,37 @@ def readimg(full_path, savedir, save_prefix=''):
         if 'graphicData' in xmlstr or len(p.text.split()) > 0:
             notemptyp.append(p)
 
-    # give text to graphic paragraphs
     contextdic = {}
     last_text = ''
+
+    # table text
+    maxrows = 500
+    rowcount = 0
+    for tb in doc.tables:
+        try:
+            rowcount += len(tb.rows)
+            if rowcount > maxrows:
+                break
+            for row in tb.rows:
+                for cell in row.cells:
+                    if len(cell.text) == 0:
+                        continue
+                    for indx, p in enumerate(cell.paragraphs):
+                        xmlstr = p._p.xml
+                        if 'graphicData' not in xmlstr:
+                            if len(p.text.split()) > 0:
+                                last_text = p.text
+                            continue
+
+                        ridreg = re.compile(r'r:embed="(.*)"')
+                        cur_rids = ridreg.findall(xmlstr)
+                        if len(cur_rids) < 1:
+                            continue
+                        contextdic[cur_rids[0]] = last_text
+        except Exception as e:
+            continue
+
+    # give text to graphic paragraphs
     for indx, p in enumerate(notemptyp):
         xmlstr = p._p.xml
         if 'graphicData' not in xmlstr:

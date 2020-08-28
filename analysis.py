@@ -287,10 +287,10 @@ def exitq() -> bool:
 
 if __name__ == '__main__':
     # servicetest()
-    # projects = find_needed_project_ids()  # with exclude
-    projects = [33]
-    have_file_projects = [33]
-    # have_file_projects = get_file_projs()
+    projects = find_needed_project_ids()  # with exclude
+    # projects = [26]
+    # have_file_projects = [26]
+    have_file_projects = get_file_projs()
 
     loop_id = 0
     while True:
