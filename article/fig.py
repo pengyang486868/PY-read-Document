@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import numpy as np
 
-plt.rc('font', family='SimSun')
+#plt.rc('font', family='SimSun')
 
 
-# plt.rc('font', family='Times New Roman')
+plt.rc('font', family='Times New Roman')
 
 
 def pca_fig():
@@ -29,6 +29,8 @@ def pca_fig():
     fig, ax1 = plt.subplots()
 
     ax1.bar(range(n), pca.explained_variance_ratio_)
+    for p in pca.explained_variance_ratio_:
+        print(p)
     ax2 = ax1.twinx()
     ax2.plot(range(n), np.cumsum(pca.explained_variance_ratio_), c='r')
     ax1.vlines(x=23, ymin=0, ymax=0.15, linestyles=':')
@@ -92,4 +94,4 @@ def classify_result():
 
 
 if __name__ == '__main__':
-    classify_result()
+    pca_fig()

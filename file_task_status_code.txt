@@ -2,4 +2,6 @@
 2-successfully analyzed
 3-reserved
 4-size too large
+5-skip some types
+6-no http download
 15-manual change (old files)

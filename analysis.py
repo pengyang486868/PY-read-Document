@@ -95,8 +95,19 @@ def on_loop(project_id):
         info_log_obj = {'id': dt['fileId'], 'name': dt['name']}
         # analysis_log('开始', info_log_obj)
         if not dt['fileUrl'].startswith('http'):
+            dt['step'] = 6
+            change_step(dt['id'], dt.to_dict(), projid=project_id)
             analysis_log('无文件', info_log_obj)
             continue
+
+        # 不分析一些类型
+        for tp in config.skip_file_types:
+            if tp in dt['fileType']:
+                dt['step'] = 5
+                change_step(dt['id'], dt.to_dict(), projid=project_id)
+                info_log_obj['type'] = dt['fileType']
+                analysis_log('跳过类型', info_log_obj)
+                continue
 
         try:
             # 下载文件到本地文件夹
@@ -109,7 +120,7 @@ def on_loop(project_id):
         # 转换文件
         try:
             # 很大的
-            if os.path.getsize(curpath) > 100 * 1000 * 1000:
+            if os.path.getsize(curpath) > 300 * 1000 * 1000:
                 analysis_log('文件过大', info_log_obj)
                 dt['step'] = 4
                 change_step(dt['id'], dt.to_dict(), projid=project_id)
@@ -289,7 +300,7 @@ if __name__ == '__main__':
     # servicetest()
     projects = find_needed_project_ids()  # with exclude
     # projects = [26]
-    # have_file_projects = [26]
+    # have_file_projects = [682]
     have_file_projects = get_file_projs()
 
     loop_id = 0
@@ -301,9 +312,11 @@ if __name__ == '__main__':
         loop_id += 1
         print('loop: ' + str(loop_id))
         for pid in projects:
+            print('loop: ' + str(loop_id) + ' / proj: ' + str(pid))
             if pid not in have_file_projects:
                 continue
             time.sleep(0.1)
             on_loop(project_id=pid)
-            print('loop: ' + str(loop_id) + ' / proj: ' + str(pid))
+            print()
+
         time.sleep(2)
