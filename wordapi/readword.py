@@ -88,7 +88,7 @@ def readimg(full_path, savedir, save_prefix=''):
         cur_rids = ridreg.findall(xmlstr)
         if len(cur_rids) < 1:
             continue
-        if notemptyp[indx + 1].text.startswith('图'):
+        if indx + 1 < len(notemptyp) and notemptyp[indx + 1].text.startswith('图'):
             contextdic[cur_rids[0]] = notemptyp[indx + 1].text
         elif indx < 1:
             contextdic[cur_rids[0]] = os.path.split(full_path)[1]

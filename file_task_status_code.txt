@@ -4,4 +4,5 @@
 4-size too large
 5-skip some types
 6-no http download
+7-analysis failed
 15-manual change (old files)

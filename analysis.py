@@ -149,8 +149,11 @@ def on_loop(project_id):
                 low_kw = real_kwords[5:]
             else:
                 low_kw = []
-        except:
+        except Exception as e:
+            # dt['step'] = 7
+            # change_step(dt['id'], dt.to_dict(), projid=project_id)
             analysis_log('分析成字段', info_log_obj)
+            print(e)
             continue
 
         # 图片附件
@@ -213,6 +216,7 @@ def on_loop(project_id):
             file_table_write_success = True
         except Exception as e:
             analysis_log('文件表填入', info_log_obj)
+            print(e)
             continue
 
         # 创建新标签并关联
@@ -238,8 +242,9 @@ def on_loop(project_id):
                         dtrels.append((dt['fileId'], tagid))
                 # 写入关联文件和标签
                 create_doctagrel(dtrels, projid=project_id)
-        except:
+        except Exception as e:
             analysis_log('标签', info_log_obj)
+            print(e)
             continue
 
         # 更改task的阶段为已完成
@@ -291,6 +296,7 @@ def exitq() -> bool:
     with open('stop.cms') as sf:
         sign = sf.readline()
     sign = int(sign)
+    print(sign)
     if sign > 0:
         return True
     return False
@@ -298,10 +304,11 @@ def exitq() -> bool:
 
 if __name__ == '__main__':
     # servicetest()
-    projects = find_needed_project_ids()  # with exclude
-    # projects = [26]
-    # have_file_projects = [682]
-    have_file_projects = get_file_projs()
+    # projects = find_needed_project_ids()  # with exclude
+    projects = [53]
+    # projects = [26, 193, 406, 53]
+    have_file_projects = projects
+    # have_file_projects = get_file_projs()
 
     loop_id = 0
     while True:
@@ -312,11 +319,14 @@ if __name__ == '__main__':
         loop_id += 1
         print('loop: ' + str(loop_id))
         for pid in projects:
-            print('loop: ' + str(loop_id) + ' / proj: ' + str(pid))
-            if pid not in have_file_projects:
-                continue
-            time.sleep(0.1)
-            on_loop(project_id=pid)
-            print()
+            try:
+                print('loop: ' + str(loop_id) + ' / proj: ' + str(pid))
+                if pid not in have_file_projects:
+                    continue
+                time.sleep(0.1)
+                on_loop(project_id=pid)
+                print()
+            except Exception as e:
+                print(e)
 
         time.sleep(2)
