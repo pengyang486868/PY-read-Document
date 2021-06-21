@@ -1,8 +1,12 @@
 1-new
 2-successfully analyzed
-3-reserved
+3-(reserved)
 4-size too large
 5-skip some types
 6-no http download
 7-analysis failed
+8-(reserved)
+9-(reserved)
+10-(reserved)
 15-manual change (old files)
+123-occupied

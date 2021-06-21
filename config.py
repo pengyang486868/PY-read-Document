@@ -6,7 +6,7 @@ test_username = 'uname'
 nlpserver = 'http://localhost:9027/chlangs'
 
 backendserver = 'http://cloudtest.ibuildingsh.com'
-n_for_project_in_loop = 3
+n_for_project_in_loop = 1000
 exclude_projects = [685, 434]
 
 skip_file_types = ['jpg', 'png', 'mp4']

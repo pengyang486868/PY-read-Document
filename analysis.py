@@ -101,13 +101,17 @@ def on_loop(project_id):
             continue
 
         # 不分析一些类型
+        no_analysis = False
         for tp in config.skip_file_types:
-            if tp in dt['fileType']:
+            if not dt['fileType'] or tp in dt['fileType']:
                 dt['step'] = 5
                 change_step(dt['id'], dt.to_dict(), projid=project_id)
                 info_log_obj['type'] = dt['fileType']
                 analysis_log('跳过类型', info_log_obj)
-                continue
+                no_analysis = True
+                break
+        if no_analysis:
+            continue
 
         try:
             # 下载文件到本地文件夹
@@ -296,7 +300,7 @@ def exitq() -> bool:
     with open('stop.cms') as sf:
         sign = sf.readline()
     sign = int(sign)
-    print(sign)
+    # print(sign)
     if sign > 0:
         return True
     return False
@@ -305,7 +309,7 @@ def exitq() -> bool:
 if __name__ == '__main__':
     # servicetest()
     # projects = find_needed_project_ids()  # with exclude
-    projects = [53]
+    projects = [687]
     # projects = [26, 193, 406, 53]
     have_file_projects = projects
     # have_file_projects = get_file_projs()
