@@ -94,7 +94,14 @@ def test_oss():
     print(r)
 
 
+def test_split_arr():
+    a = [1, 2, 3, 4, 5, 6, 7]
+    n = 2
+    b = np.split(np.array(a), np.array(range(1, int(len(a) / n) + 1)) * n)
+    print(b)
+
+
 if __name__ == '__main__':
     # 林松 = 牛人('林松啊')
     # 林松.嚎()
-    test_oss()
+    test_split_arr()
