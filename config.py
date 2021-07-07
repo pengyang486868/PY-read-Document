@@ -1,3 +1,7 @@
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
+
 default_constr = "mysql+pymysql://fmmanager:Zzkj3333@rm-bp1x76yga76x16n4ybo.mysql.rds.aliyuncs.com:3306/cmpdw"
 kw_topk = 20
 kw_topk_image = 5
@@ -9,7 +13,10 @@ backendserver = 'http://cloudtest.ibuildingsh.com'
 n_for_project_in_loop = 1000
 exclude_projects = [685, 434]
 
-skip_file_types = ['jpg', 'png', 'mp4']
+skip_file_types = ['jpg', 'png', 'mp4', 'xls', 'xlsx',
+                   'css', 'js', 'html', 'gif', 'js',
+                   'qm', 'mov', 'mts',
+                   'vob', 'avi', 'wav', 'exe', 'iso']
 
 batch_file_upload_root = r'F:\402\testupload'
 
@@ -20,3 +27,7 @@ token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEiLCJOYW1lIjoicm9
 
 analyzing_projects = [4]
 web_keywords_num = 5
+
+CONSTR = {
+    'test': "mysql+pymysql://root:Bim54519518@testdb.ibuildingsh.com:3306/ibuildingcloud-test",
+}

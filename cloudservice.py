@@ -1,6 +1,10 @@
 import json
 from urllib import request, parse
 import config
+from sqlalchemy import create_engine
+import pandas as pd
+
+conStr = config.CONSTR['test']
 
 
 # general GET
@@ -58,6 +62,20 @@ def get_documenttask(projid=0):
     url = config.backendserver + '/api/projects/{}/entities/documenttask'.format(projid)
     response = get_action(url)
     return response
+
+
+# WHERE ProjectId=687 AND FileType NOT IN ('doc', 'docx', 'ppt', 'pptx', 'pdf', 'dwg') LIMIT 100
+def get_new_doc_task_db(projid=0, filetype=None, notin=None):
+    dw = create_engine(conStr).connect()
+    if filetype:
+        query = '''SELECT * FROM DocumentTasks
+                WHERE ProjectId={} AND Step=1 AND FileType='{}' '''.format(projid, filetype)
+    else:
+        notinstr = ','.join(["'{}'".format(x) for x in notin])
+        query = '''SELECT * FROM DocumentTasks
+                WHERE ProjectId={} AND Step=1 AND FileType NOT IN ({}) LIMIT 10000'''.format(projid, notinstr)
+    data = pd.read_sql_query(query, dw)
+    return data
 
 
 def download_doc(docurl, path):
@@ -184,7 +202,7 @@ def add_proj_simple(pname, pnumber, pstage, parea):
     return True
 
 
-def add_attachment(atta,projid=0):
+def add_attachment(atta, projid=0):
     url = config.backendserver + '/api/projects/{}/files/attachments'.format(projid)
     params = atta
     response = post_action(url, params)

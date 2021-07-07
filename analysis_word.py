@@ -1,5 +1,5 @@
 import pandas as pd
-from cloudservice import get_documenttask, download_doc
+from cloudservice import get_documenttask, download_doc, get_new_doc_task_db
 from cloudservice import get_doctag, create_doctag, delete_doctag
 from cloudservice import create_doctagrel, delete_doctagrel
 from cloudservice import change_step
@@ -17,81 +17,32 @@ def analysis_log(info, info_obj):
     print(info, info_obj)
 
 
-def test():
-    docresponse = get_documenttask(projid=4)
-    docdata = pd.DataFrame(docresponse)
-
-    docdata = (docdata.sort_values('name')
-               .dropna(subset=['fileUrl', 'step'])
-               .reset_index()
-               )
-
-    utest = docdata['fileUrl'].tolist()[0]
-    dname = docdata['name'].tolist()[0]
-    # download_doc(utest, 'D:\\' + dname)
-
-    r1 = create_doctag('混凝土', projid=4)
-    r2 = create_doctag('施工', projid=4)
-    # r = delete_doctag(1)
-    # allt = get_doctag()
-    create_doctagrel([(155, r1), (155, r2)], projid=4)
-    print()
-
-
-def servicetest():
-    # docresponse = get_documenttask(projid=4)
-    # docdata = pd.DataFrame(docresponse)
-    # # data1 = docresponse[66]
-    # for indx, dt in docdata.iterrows():
-    #     dt['step'] = 1
-    #     change_step(dt['id'], dt.to_dict(), projid=4)
-    doc1 = get_docs_byid(153, projid=4)
-    # doc1 = docs_response[10]
-    doc1['abstract'] = 'new abstract'
-    updated = {
-        "name": doc1['name'],
-        "remark": doc1['remark'],
-        "keyWord": doc1['keyWord'],
-        "abstract": doc1['abstract'],
-        "url": doc1['url'],
-        "fileSize": doc1['fileSize'],
-        "fileType": doc1['fileType'],
-        "directoryId": doc1['directoryId'],
-        "creatorId": 1,
-        "uploaderId": 1,
-        "newWords": "string",
-        "wordFrequency": "string",
-        "phrases": "string"
-    }
-    fill_docinfo(doc1['id'], updated, projid=4)
-
-
-def reset_steps():
-    docresponse = get_documenttask(projid=4)
-    docdata = pd.DataFrame(docresponse)
-    for indx, dt in docdata.iterrows():
-        dt['step'] = 1
-        change_step(dt['id'], dt.to_dict(), projid=4)
-
-
 def on_loop(project_id):
-    docresponse = get_documenttask(projid=project_id)
-    docdata = pd.DataFrame(docresponse)
+    # docresponse = get_documenttask(projid=project_id)
+    # docdata = pd.DataFrame(docresponse)
+    docdata = get_new_doc_task_db(project_id, 'doc')
     if len(docdata) == 0:
         return
 
-    docdata = docdata[docdata['step'] == 1]
+    # docdata = docdata[(docdata['step'] == 1) & (docdata['fileType'] == 'dwg')]
     docdata = docdata.tail(config.n_for_project_in_loop)
+    docdata.columns = [s[0].lower() + s[1:] for s in docdata.columns]
 
-    docdata = (docdata.sort_values('name')
-               .dropna(subset=['fileUrl', 'step'])
+    docdata = (docdata.dropna(subset=['fileUrl', 'step'])
                .reset_index()
                )
+
+    # docdata = (docdata.sort_values('name')
+    #            .dropna(subset=['fileUrl', 'step'])
+    #            .reset_index()
+    #            )
 
     # basepath = os.path.join(config.root_dir, str(project_id))
     basepath = config.root_dir
     imgdir = os.path.join(config.root_dir, 'images')
     for indx, dt in docdata.iterrows():
+        dt['createTime'] = str(dt['createTime'].asm8)
+        print(datetime.now())
         info_log_obj = {'id': dt['fileId'], 'name': dt['name']}
         # analysis_log('开始', info_log_obj)
         if not dt['fileUrl'].startswith('http'):
@@ -157,10 +108,9 @@ def on_loop(project_id):
             else:
                 low_kw = []
         except Exception as e:
-            analysis_log('分析成字段', info_log_obj)
             dt['step'] = 7
             change_step(dt['id'], dt.to_dict(), projid=project_id)
-            analysis_log('完成', info_log_obj)
+            analysis_log('分析成字段', info_log_obj)
             print(e)
             continue
 

@@ -1,3 +1,5 @@
+import pandas as pd
+
 import utils
 import numpy as np
 import re
@@ -101,7 +103,17 @@ def test_split_arr():
     print(b)
 
 
+def test_pandas():
+    d = pd.DataFrame([[1, 2, 3], [2, 3, 4], [3, 4, 5]], columns=['a', 'b', 'c'])
+    print(d)
+
+    df = d[(d['a'] == 2) & (d['b'] < 4)]
+
+    print(df)
+
+
 if __name__ == '__main__':
     # 林松 = 牛人('林松啊')
     # 林松.嚎()
-    test_split_arr()
+    # test_split_arr()
+    test_pandas()

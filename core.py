@@ -84,11 +84,11 @@ def analysis(fpath: str, extname, imgdir=None, do_drawings=False):
                 drawings = readdxf.split_drawing_byblock(fpath)
 
         if extname == '.dwg':
-            maxtry = 20
+            maxtry = 30
             transpath = fpath.replace('.dwg', '.dxf')
             for ii in range(maxtry):
                 print(ii)
-                time.sleep(2)
+                time.sleep(3)
                 if os.path.isfile(transpath):
                     content = readdxf.readtxt(transpath)
                     if do_split_drawing:
